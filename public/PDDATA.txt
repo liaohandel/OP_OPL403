@@ -1,6 +1,6 @@
 {
 	"PDDATA":{
-		"UUID": "OFA1C002DC0E7105AD6A2886",
+		"UUID": "OFA1C0030000000000000000",
 		"dsnurl": "http://106.104.112.56/Cloud/API/linkbox.php",
 		"videodsnurl": "http://106.104.112.56/Cloud/API/videobox.php",
 		"devloadurl": "http://106.104.112.56/Cloud/API/DeviceUpdate.php",
