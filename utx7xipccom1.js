@@ -77,12 +77,26 @@ function rxchk(rbuf){
 			//}			
 			if(sbuf[0]==0xfc){
 				aqrxcmd.push(sbuf.toString('hex'));
-				rx_pt = 0;
+				moverxlen = rx_buf[2]+3;
+				shiftrxlen = rx_size - moverxlen;
+				if(rx_pt > moverxlen){
+					rx_pt = rx_pt - moverxlen ;
+					rx_buf.copy(rx_buf,0,moverxlen,shiftrxlen);
+				}else{
+					rx_pt=0;
+				}
 				global.arxokflag = true;
 				console.log('rxcommx1 ='+sbuf.toString('hex'));//rxcomm
 			}else{		
 				qrxcmd.push(sbuf.toString('hex'));
-				rx_pt = 0;
+				moverxlen = rx_buf[2]+3;
+				shiftrxlen = rx_size - moverxlen;
+				if(rx_pt > moverxlen){
+					rx_pt = rx_pt - moverxlen ;
+					rx_buf.copy(rx_buf,0,moverxlen,shiftrxlen);
+				}else{
+					rx_pt=0;
+				}
 				global.rxokflag = true;
 				console.log('rxcommx2 ='+sbuf.toString('hex'));
 				//send next tx command event

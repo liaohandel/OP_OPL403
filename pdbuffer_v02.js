@@ -5,6 +5,16 @@ var event = new EventEmitter();
 
 var Client = require('node-rest-client').Client;
 var client = new Client();
+var cargs = {
+    requestConfig: {
+        timeout: 500,
+        noDelay: true,
+        keepAlive: true
+    },
+    responseConfig: {
+        timeout: 1000 //response timeout 
+    }
+};
 
 var path = require('path');
 var fs = require('fs');
@@ -157,7 +167,6 @@ function sysupdate(callback){
 	fs.writeFile(filepath,uuiddata,function(error){
 		if(error){ //如果有錯誤，把訊息顯示並離開程式
 			console.log('PDDATA.txt update ERR ! ');
-			
 		}		
 		callback(err);
 	});
@@ -237,11 +246,13 @@ function jautocmd_load(callback){
 }
 
 function jautocmd_update(callback){	
-	let jautocmddata = JSON.stringify(jautocmd);					
+	let jautocmddata = JSON.stringify(jautocmd);		
+	console.log('JAUTOCMD.txt update run x1 ! ');				
 	fs.writeFile(filepath_jautocmd,jautocmddata,function(error){
 		if(error){ //如果有錯誤，把訊息顯示並離開程式
 			console.log('JAUTOCMD.txt update ERR ! ');
-		}		
+		}	
+		console.log('JAUTOCMD.txt update ok x2! ');	
 		callback();
 	});	
 }
@@ -285,7 +296,7 @@ function devloadtobuff(sub02cmd){
 	ss = sub02cmd
 	sdevreg = ss.substring(10,12);			//reg type	
 	nsdevadd = Number("0x"+sdevadd);	
-	//let dcnt=""
+	let offsettmval = 0;
 	
 	if(nsdevadd > 0xf0){
 		if(nsdevadd == 0xf1)return
@@ -312,7 +323,7 @@ function devloadtobuff(sub02cmd){
 	
 	sdevsubcmd = ss.substring(8,10);	//subcmd
 	sdevreg = ss.substring(10,12);		//reg type	
-	console.log("check 02 rxcmd = "+sub02cmd+" reg="+sdevreg);
+	console.log("check 02 rxcmd = "+sub02cmd+" reg="+sdevreg +" sop="+sdevpos);
 	
 	//device out status  load check 
 	switch(sdevreg.substring(0,1)){
@@ -349,49 +360,127 @@ function devloadtobuff(sub02cmd){
 			//xpdjobj.PDDATA.Devtab[sdevpos]["C72"]["chtab"][sdevreg].sub = Number("0x"+sdevsubcmd)
 			xpdjobj.PDDATA.Devtab[sdevpos]["C72"]["chtab"][sdevreg].stu = Number("0x"+sdevstau);
 			break
-		case "6":	//WATERLEVEL(C79) reg61 .. 6f basic maping
+		case "6":	//PUMP reg61 .. 6f extern maping
 			sdevstau = ss.substring(12,16);			//reg type	
-			//xpdjobj.PDDATA.Devtab[sdevpos]["C79"]["chtab"][sdevreg].sub = Number("0x"+sdevsubcmd)
-			xpdjobj.PDDATA.Devtab[sdevpos]["C79"]["chtab"][sdevreg].stu = Number("0x"+sdevstau);
+			//xpdjobj.PDDATA.Devtab[sdevpos]["C72"]["chtab"][sdevreg].sub = Number("0x"+sdevsubcmd)
+			xpdjobj.PDDATA.Devtab[sdevpos]["C72"]["chtab"][sdevreg].stu = Number("0x"+sdevstau);
 			break
+			
 		case "7":	//WATERLEVEL(C79) reg71 .. 7f extern maping 
 			sdevstau = ss.substring(12,16);			//reg type	
 			//xpdjobj.PDDATA.Devtab[sdevpos]["C79"]["chtab"][sdevreg].sub = Number("0x"+sdevsubcmd)
-			xpdjobj.PDDATA.Devtab[sdevpos]["C79"]["chtab"][sdevreg].stu = Number("0x"+sdevstau);
-			break
-		
-		case "A":	//TEMPERATURE(C77)_regA1 .. AF
-			sdevstau = ss.substring(12,16);			//reg type	
+			chkval = Number("0x"+sdevstau);
+			chklevel = chkval;
+			switch(sdevreg){
+				case "71":
+					if(chkval <= 30)return;
+					chklevel = Math.round((chkval-2340)/58);//1 ..21
+					if(chklevel <= 0)chklevel=1;
+					//chklevel = chklevel	+1;//1 ..21
+					break	
+				case "72":
+					if(chkval <= 30)return;
+					chklevel = Math.round((chkval-2580)/50);//1 ..21
+					if(chklevel <= 0)chklevel=1;
+					//chklevel = chklevel	+1;//1 ..21
+					break	
+				case "73":
+					if(chkval <= 30)return;
+					chklevel = Math.round((chkval-2020)/60);//1 ..21
+					if(chklevel <= 0)chklevel=1;
+					//chklevel = chklevel	+1;//1 ..21
+					break	
+				case "74":
+					if(chkval <= 30)return;
+					chklevel = Math.round((chkval-2400)/50);//1 ..21
+					if(chklevel <= 0)chklevel=1;
+					//chklevel = chklevel	+1;//1 ..21
+					break	
+				case "75":
+					if(chkval <= 30)return;
+					chklevel = Math.round((chkval-2400)/50);//1 ..21
+					if(chklevel <= 0)chklevel=1;
+					//chklevel = chklevel	+1;//1 ..21
+					break	
+				case "76":	
+					if(chkval <= 30)return;			
+					chklevel = Math.round((chkval-2300)/70);//1 ..21
+					if(chklevel <= 0)chklevel=1;
+					//chklevel = chklevel	+1;//1 ..21
+					break	
+				case "77":
+					if(chkval <= 30)return;
+					chklevel = Math.round((chkval-2300)/70);
+					if(chklevel <= 0)chklevel=1;
+					//chklevel = chklevel	+1;//1 ..21
+					break	
+				default:
+					return;
+					break 	
+			}
+			if(chklevel <=0)chklevel=1;
+			if(chklevel >=20 )chklevel=20;// water level rang 1..20
+			xpdjobj.PDDATA.Devtab[sdevpos]["C79"]["chtab"][sdevreg].stu = chklevel;
+			return;
+			break		
+		//case "A":	//TEMPERATURE(C77)_regA1 .. AF
+			//sdevstau = ss.substring(12,16);			//reg type	
 			//xpdjobj.PDDATA.Devtab[sdevpos]["C77"]["chtab"][sdevreg].sub = Number("0x"+sdevsubcmd)
-			xpdjobj.PDDATA.Devtab[sdevpos]["C77"]["chtab"][sdevreg].stu = Number("0x"+sdevstau);
-			break
+			
+			// offsettmval = 0 ;//system offset value 
+			// if(sdevpos in  jautocmd.DEVICESET.OFFSETTM)offsettmval = jautocmd.DEVICESET.OFFSETTM[sdevpos];
+			// xpdjobj.PDDATA.Devtab[sdevpos]["C77"]["chtab"][sdevreg].stu = Number("0x"+sdevstau) + offsettmval;
+			
+		//	xpdjobj.PDDATA.Devtab[sdevpos]["C77"]["chtab"][sdevreg].stu = Number("0x"+sdevstau);
+		//	break
 		default:
 			break 
 	};
 	
 	//sensor load check 
 	switch(sdevreg){
-		//case "A1":	//TEMPERATURE(C77)	#regA1
-		//	sdevstau = ss.substring(12,16);			//reg type	
-		//	//xpdjobj.PDDATA.Devtab[sdevpos]["C76"]["chtab"][sdevreg].sub = Number("0x"+sdevsubcmd)
-		//	xpdjobj.PDDATA.Devtab[sdevpos]["C77"]["chtab"][sdevreg].stu = Number("0x"+sdevstau);		
-		//	break
+		case "A1":	//TEMPERATURE(C77)	#regA1
+			sdevstau = ss.substring(12,16);			//reg type	
+			//xpdjobj.PDDATA.Devtab[sdevpos]["C76"]["chtab"][sdevreg].sub = Number("0x"+sdevsubcmd)			
+			//xpdjobj.PDDATA.Devtab[sdevpos]["C77"]["chtab"][sdevreg].stu = Number("0x"+sdevstau);				
+			offsettmval = 0 ;//system offset value 
+			if(sdevpos in  jautocmd.DEVICESET.OFFSETTM){
+				jautocmd.DEVICESET.CHKLOADTM[sdevpos] = Number("0x"+sdevstau);//load save the realytime value by sensor
+				offsettmval = jautocmd.DEVICESET.OFFSETTM[sdevpos];
+			}
+			xpdjobj.PDDATA.Devtab[sdevpos]["C77"]["chtab"][sdevreg].stu = Number("0x"+sdevstau) + offsettmval;	
+			
+			break
 		case "91":	//CO2(C76)	#reg91
 			sdevstau = ss.substring(12,16);			//reg type	
 			//xpdjobj.PDDATA.Devtab[sdevpos]["C76"]["chtab"][sdevreg].sub = Number("0x"+sdevsubcmd)
-			xpdjobj.PDDATA.Devtab[sdevpos]["C76"]["chtab"][sdevreg].stu = Number("0x"+sdevstau);		
+			//xpdjobj.PDDATA.Devtab[sdevpos]["C76"]["chtab"][sdevreg].stu = Number("0x"+sdevstau);			
+			offsettmval = 0 ;//system offset value 	
+			if(sdevpos in  jautocmd.DEVICESET.OFFSETCO2){
+				jautocmd.DEVICESET.CHKLOADCO2[sdevpos] = Number("0x"+sdevstau);//load save the realytime value by sensor
+				offsettmval = jautocmd.DEVICESET.OFFSETCO2[sdevpos];
+			}
+			xpdjobj.PDDATA.Devtab[sdevpos]["C76"]["chtab"][sdevreg].stu = Number("0x"+sdevstau) + offsettmval;	
+			
 			break
 		case "92":	//RH(C78)	#reg92
 			sdevstau = ss.substring(12,16);			//reg type	
 			//xpdjobj.PDDATA.Devtab[sdevpos]["C78"]["chtab"][sdevreg].sub = Number("0x"+sdevsubcmd)
-			xpdjobj.PDDATA.Devtab[sdevpos]["C78"]["chtab"][sdevreg].stu = Number("0x"+sdevstau);		
+			//xpdjobj.PDDATA.Devtab[sdevpos]["C78"]["chtab"][sdevreg].stu = Number("0x"+sdevstau);		
+			offsettmval = 0 ;//system offset value 	
+			if(sdevpos in  jautocmd.DEVICESET.OFFSETRH){
+				jautocmd.DEVICESET.CHKLOADRH[sdevpos] = Number("0x"+sdevstau);//load save the realytime value by sensor
+				offsettmval = jautocmd.DEVICESET.OFFSETRH[sdevpos];
+			}
+			xpdjobj.PDDATA.Devtab[sdevpos]["C78"]["chtab"][sdevreg].stu = Number("0x"+sdevstau) + offsettmval;
+			
 			break
-		case "93":	//PH(C7B)   #reg73
+		case "93":	//PH(C7B)   #reg93
 			sdevstau = ss.substring(12,16);			//reg type	
 			//xpdjobj.PDDATA.Devtab[sdevpos]["C7B"]["chtab"][sdevreg].sub = Number("0x"+sdevsubcmd)
 			xpdjobj.PDDATA.Devtab[sdevpos]["C7B"]["chtab"][sdevreg].stu = Number("0x"+sdevstau);		
 			break
-		case "94":	//ELECTRONS(C7A)#reg74
+		case "94":	//ELECTRONS(C7A)#reg94
 			sdevstau = ss.substring(12,16);			//reg type	
 			//xpdjobj.PDDATA.Devtab[sdevpos]["C7A"]["chtab"][sdevreg].sub = Number("0x"+sdevsubcmd)
 			xpdjobj.PDDATA.Devtab[sdevpos]["C7A"]["chtab"][sdevreg].stu = Number("0x"+sdevstau);		
@@ -580,15 +669,19 @@ function deverrbuff(errcmd){//fcc10681019f010381
 }
 
 var sstxbuff=[];//txbuffer list
+
 function totxbuff(ttbuf){
 	let scmd = ttbuf.toString('hex')
 	let sendmask = 0;
+	
+	//console.log("startx1 tx run ... txbuffer leng= "+sstxbuff.length);
+	
 	if(sstxbuff.length == 0 )sendmask = 1;
 	sstxbuff.push(scmd)
 	//if (sstxbuff.length == 1){
 	if (sendmask == 1){
 		//event.emit('txbuff_event'); 
-		//console.log("start tx run ... ")/
+		console.log("startx2 tx run ... txbuffer leng= "+sstxbuff.length);
 		//tx_timeout_chk = false;
 		setTimeout(function() { 
 			event.emit('txbuff_event'); 
@@ -600,10 +693,10 @@ event.on('txbuff_event', function() {
 	if(sstxbuff.length > 0){
 	   let scmd = sstxbuff.shift();
 	   ch1com.qqsendcmd(scmd,function(){	   
-			console.log(">>> rxbuff timeout check ...");
+			//console.log(">>> rxbuff timeout check ...");
 			setTimeout(function() { 
 				event.emit('rxbuff_event'); 
-			}, 500); //#### tx bufffer dealy 1300ms ???
+			}, 300); //#### tx bufffer dealy 1300ms ???
 	   });			
 	}
 });
@@ -611,35 +704,45 @@ event.on('txbuff_event', function() {
 //0xF5,addr,0x02,0x50,0x50
 //F5,addr,0x05,0x70,[pos1][pos2],[gorup],0x70 
 event.on('rxbuff_event', function() { //####
-	if(ch1com.qrxcmd.length > 0){
-		console.log("rxleng="+ch1com.qrxcmd.length );
-		//ss = ch1com.qrxcmd.shift()
-		ssbuf = ch1com.qrxcmdshift();
-		ss = ssbuf.toUpperCase();
-		console.log("<<< show cmd rx: " + ss)
-		//check pos onlink
-		startkey = ss.substring(0,2);//0xfa or 0xfc
-		sdevadd = ss.substring(2,4);
-		sdevcmd = ss.substring(8,10);
-		sdevreg = ss.substring(10,12);
-		if(startkey == "FC"){
-			devalarmbuff(ss);//add to alarmbuff[]
-		}else{			
-			sdevsubcmd = ss.substring(8,10);	
-			console.log("rx subcmd chek = "+sdevsubcmd)
-			if(sdevsubcmd == '02')devloadtobuff(ss);//when load command will to setup buffer
-			if(sdevsubcmd == '52')deverrbuff(ss);   //when Err Code Message buffer send to server 
+	while(ch1com.qrxcmd.length > 0){
+		if(ch1com.qrxcmd.length > 0){
+			//console.log("rxleng="+ch1com.qrxcmd.length );
+			//ss = ch1com.qrxcmd.shift()
+			ssbuf = ch1com.qrxcmdshift();
+			ss = ssbuf.toUpperCase();
+			console.log("<<< show cmd rx["+ch1com.qrxcmd.length +"]:" + ss)
+			//check pos onlink
+			startkey = ss.substring(0,2);//0xfa or 0xfc
+			sdevadd = ss.substring(2,4);
+			sdevcmd = ss.substring(8,10);
+			sdevreg = ss.substring(10,12);
+			if(startkey == "FC"){
+				devalarmbuff(ss);//add to alarmbuff[]
+			}else{			
+				sdevsubcmd = ss.substring(8,10);	
+				console.log("rx subcmd chek = "+sdevsubcmd)
+				if(sdevsubcmd == '02')devloadtobuff(ss);//when load command will to setup buffer
+				if(sdevsubcmd == '52')deverrbuff(ss);   //when Err Code Message buffer send to server 
+			}
+		}else{		
+			//console.log("<<< show cmd rx timeOut Fail rxleng="+ch1com.qrxcmd.length );
+			console.log("<<< show cmd cehk rxleng="+ch1com.qrxcmd.length );
+			//tx_timeout_chk = true;		
 		}
-	}else{		
-		//console.log("<<< show cmd rx timeOut Fail rxleng="+ch1com.qrxcmd.length );
-		console.log("<<< show cmd cehk rxleng="+ch1com.qrxcmd.length );
-		//tx_timeout_chk = true;		
-	}
-	if(sstxbuff.length > 0){	
-		setTimeout(function() { 
+		
+		if(sstxbuff.length > 0){	
+			// setTimeout(function() { 
+				// event.emit('txbuff_event'); 
+			// }, 50);	
 			event.emit('txbuff_event'); 
-		}, 50);	
-		//event.emit('txbuff_event'); 
+		}	
+	}
+	
+	if(sstxbuff.length > 0){	
+		// setTimeout(function() { 
+			// event.emit('txbuff_event'); 
+		// }, 50);	
+		event.emit('txbuff_event'); 
 	}	
 });
 
@@ -647,24 +750,27 @@ event.on('rxbuff_event', function() { //####
 //0xF5,addr,0x02,0x50,0x50
 //F5,addr,0x05,0x70,[pos1][pos2],[gorup],0x70 
 event.on('arxbuff_event', function() { //####
-	if(ch1com.aqrxcmd.length > 0){
-		console.log("rxleng="+ch1com.aqrxcmd.length );
-		//ss = ch1com.qrxcmd.shift()
-		ssbuf = ch1com.aqrxcmdshift();
-		ss = ssbuf.toUpperCase();
-		console.log("<<< show cmd rx: " + ss)
-		//check pos onlink
-		startkey = ss.substring(0,2);//0xfa or 0xfc[0][1][2][3][4:cmd][5:reg][6,7:value],[8,9:group],[10]
-		//sdevadd = ss.substring(2,4); //[01 23 45 67 89 01 23 45 67 89 01]
-		//sdevcmd = ss.substring(8,10);
-		//sdevreg = ss.substring(10,12);
-		if(startkey == "FC"){
-			devalarmbuff(ss);//add to alarmbuff[]
-		}else{
-			console.log("Fxx rxcomm = "+ss);
-		}
-	}else{		
-		console.log("<<< show cmd rx timeOut Fail rxleng="+ch1com.aqrxcmd.length );
+	while(ch1com.aqrxcmd.length > 0){
+		if(ch1com.aqrxcmd.length > 0){
+			//console.log("arxleng="+ch1com.aqrxcmd.length );
+			//ss = ch1com.qrxcmd.shift()
+			ssbuf = ch1com.aqrxcmdshift();
+			ss = ssbuf.toUpperCase();
+			console.log("<<< show cmd arx["+ch1com.aqrxcmd.length+"]=" + ss)
+			//check pos onlink
+			startkey = ss.substring(0,2);//0xfa or 0xfc[0][1][2][3][4:cmd][5:reg][6,7:value],[8,9:group],[10]
+			//sdevadd = ss.substring(2,4); //[01 23 45 67 89 01 23 45 67 89 01]
+			//sdevcmd = ss.substring(8,10);
+			//sdevreg = ss.substring(10,12);
+			if(startkey == "FC"){
+				devalarmbuff(ss);//add to alarmbuff[]
+			}else{
+				console.log("Fxx rxcomm = "+ss);
+			}
+			
+		}else{		
+			console.log("<<< show cmd rx timeOut Fail rxleng="+ch1com.aqrxcmd.length );
+		}		
 	}
 })
 
@@ -719,10 +825,12 @@ event.on('sendkeypad_event', function() { //FCC10681019E010281
 //0xFC alarm 主動回報 警告處置 KeyPAD 觸發 主動回報處置
 function devalarmbuff(alarmcmd){//fcc10681019f010381
 	//check pos onlink
-	sdevadd = alarmcmd.substring(2,4);		//add
-	sdevcmd = alarmcmd.substring(8,10);     //subcmd
-	sdevreg = alarmcmd.substring(10,12);			//reg type	
-	nsdevadd = Number("0x"+sdevadd);
+	let alarmcode ="0000";
+	let apos = "0000";
+	let sdevadd = alarmcmd.substring(2,4);		//add
+	let sdevcmd = alarmcmd.substring(8,10);     //subcmd
+	let sdevreg = alarmcmd.substring(10,12);	//reg type	
+	let nsdevadd = Number("0x"+sdevadd);
 	
 	//0xFC,[ipadd],[len],[00],[0x07 alarm], [reg] , [dataH][dataL],chk
 	//  01  23       45   67   89           01       23     45     67 
@@ -758,7 +866,7 @@ function devalarmbuff(alarmcmd){//fcc10681019f010381
 	ss = alarmcmd
 	//keypad push alarm broadcast to server ### 20180610 update hadnel 
 	if(nsdevadd == 0x20){// keypad1 and keypad2 maping in E001 0x20 reg:10 , 12
-		if(sdevreg == "10"){  //keypad1 8 keycode:  0x91 .. 0x98
+		if(sdevreg == "10"){  //keypad1 8 keycode:  0x91 .. 0x98 FC20060003109801AF
 			//keypad1
 			let skeyinx = ss.substr(12,2);	
 			let skeystu = ss.substr(14,2);
@@ -788,7 +896,7 @@ function devalarmbuff(alarmcmd){//fcc10681019f010381
 			// }
 			
 			//jkeypd.KEYLIB.KEYPAD1[ksop]["STATUS"]["stcnt"]= Number("0x"+skeystu);
-			return
+			return;
 		}else if(sdevreg == "12"){	//keypad2  68 keycode: 0x21 .. 0x6b
 			//keypad2
 			let skeyinx = ss.substr(12,2);	
@@ -818,35 +926,99 @@ function devalarmbuff(alarmcmd){//fcc10681019f010381
 				// console.log("key="+ksop+"no define in keypad2")
 			// }
 			//jkeypd.KEYLIB.KEYPAD2[ksop]["STATUS"]["stcnt"]= Number("0x"+skeystu);
-			return
+			return;
 		}
 	}
+	
 	if(nsdevadd == 0x21){
-		if(sdevreg == "10"){  //keypad1 8 keycode:  0x91 .. 0x98
-			//keypad3
-			skeyinx = ss.substring(12,14);	
-			skeystu = ss.substring(14,16);
-			let kkss = "03"+skeyinx+skeystu;
-			if(keypadpushbuffer.length > 32)keypadpushbuffer=[];//buffer mac 32 item 
-			keypadpushbuffer.push(kkss);
-			//jkeypd.KEYLIB.KEYPAD1[ksop]["STATUS"]["stcnt"]= Number("0x"+skeystu);
-			return
-		}else if(sdevreg == "12"){	//keypad2  68 keycode: 0x21 .. 0x6b
-			//keypad4
-			return
+		switch (sdevreg) {
+			case "10": //keypad1 8 keycode:  0x91 .. 0x98
+				//keypad3
+				skeyinx = ss.substring(12,14);	
+				skeystu = ss.substring(14,16);
+				let kkss = "03"+skeyinx+skeystu;
+				if(keypadpushbuffer.length > 32)keypadpushbuffer=[];//buffer mac 32 item 
+				keypadpushbuffer.push(kkss);
+				//jkeypd.KEYLIB.KEYPAD1[ksop]["STATUS"]["stcnt"]= Number("0x"+skeystu);
+				return
+				break;
+			case "12": //keypad2  68 keycode: 0x21 .. 0x6b
+				//keypad4
+				return;
+				break;
+			default:
+				break;
 		}
+		//jautocmd.EVENTID.DEVPUMP
+		if(sdevreg in jautocmd.EVENTID.DEVPUMP){	
+			apos = jautocmd.EVENTID.DEVPUMP[sdevreg][0];
+			atype =  jautocmd.EVENTID.DEVPUMP[sdevreg][1];
+			alarmcode =  jautocmd.EVENTID.DEVPUMP[sdevreg][2];
+			if(sdevcmd == "07"){			
+				//alarm code 0x4001 => by POS device list to upload
+				update_alarmcodeurl= "http://tscloud.opcom.com/Cloud/API/v2/Alarm"+"?ID="+setuuid+"&POS="+apos+"&Type="+atype+"&value="+alarmcode+"&Data=0";
+				console.log(">>alarm update to web DB =>"+update_alarmcodeurl);
+				client.get(update_alarmcodeurl,cargs, function (data, response) {
+					console.log("alarm code active update to webDB pump  ok ...");
+				}).on("error", function(err) {console.log("err for client");}).on('requestTimeout', function (req) {req.abort();});
+
+				updateipc_alarmcodeurl= "http://192.168.5.220/API/v2/Alarm.php"+"?ID="+setuuid+"&POS="+apos+"&Type="+atype+"&value="+alarmcode+"&Data=0";
+				console.log(">>alarm update to web DB =>"+updateipc_alarmcodeurl);
+				client.get(updateipc_alarmcodeurl,cargs, function (data, response) {
+					console.log("alarm code active update to webDB  pump ok ...");
+				}).on("error", function(err) {console.log("err for client");}).on('requestTimeout', function (req) {req.abort();});
+			}
+		}
+		return;
+	}
+	
+	if(((nsdevadd==0x84) || (nsdevadd==0xBD)) && sdevcmd == "07"){//PIR
+		if(sdevreg == "41"){
+			let kkss = "019901";
+			if(keypadpushbuffer.length > 32)keypadpushbuffer=[];//buffer mac 32 item 
+			keypadpushbuffer.push(kkss);//push K099 OFF UV and wayLED on
+			//jkeypd.KEYLIB.KEYPAD1[ksop]["STATUS"]["stcnt"]= Number("0x"+skeystu);
+			return			
+		}else{
+			return
+		}			
+	}
+	
+	if((nsdevadd>=0x2f) && (nsdevadd<=0xe0) && (sdevcmd=="07")){//device Fail alarm addposmap
+		//if(!(sdevadd in xpdjobj.PDDATA.addposmap))return;
+	
+		if(!(sdevadd in jautocmd.EVENTID.DEVLED))return;
+		apos = jautocmd.EVENTID.DEVLED[sdevadd][0];
+		atype =  jautocmd.EVENTID.DEVLED[sdevadd][1];
+		alarmcode =  jautocmd.EVENTID.DEVLED[sdevadd][2];
+		
+		//alarm code 0x4001 => by POS device list to upload
+		update_alarmcodeurl= "http://tscloud.opcom.com/Cloud/API/v2/Alarm"+"?ID="+setuuid+"&POS="+apos+"&Type="+atype+"&value="+alarmcode+"&Data=0";
+		console.log(">>alarm update to web DB =>"+update_alarmcodeurl);
+		client.get(update_alarmcodeurl,cargs, function (data, response) {
+			console.log("alarm code active update to webDB   ok ...");
+		}).on("error", function(err) {console.log("err for client");}).on('requestTimeout', function (req) {req.abort();});
+
+
+		updateipc_alarmcodeurl= "http://192.168.5.220/API/v2/Alarm.php"+"?ID="+setuuid+"&POS="+apos+"&Type="+atype+"&value="+alarmcode+"&Data=0";
+		console.log(">>alarm update to web DB =>"+updateipc_alarmcodeurl);
+		client.get(updateipc_alarmcodeurl,cargs, function (data, response) {
+			console.log("alarm code active update to webDB   ok ...");
+		}).on("error", function(err) {console.log("err for client");}).on('requestTimeout', function (req) {req.abort();});
+		
+	
 	}
 	
 	//=== check sop & reg for sensor value save 
 	switch(sdevreg.substring(0,1)){		
-		case "5":	//TEMPERATURE(C77) reg 51..5f
+		case "A":	//TEMPERATURE(C77) reg A1..Af
 			sdevstau = ss.substring(12,16);			//reg type	
 			if(!(sdevreg in xpdjobj.PDDATA.Devtab[sdevpos]["C77"]["chtab"]))return
 			xpdjobj.PDDATA.Devtab[sdevpos]["C77"]["chtab"][sdevreg].sub = Number("0x"+sdevsubcmd)
 			xpdjobj.PDDATA.Devtab[sdevpos]["C77"]["chtab"][sdevreg].stu = Number("0x"+sdevstau);
 			//send alarm to webserver ....
 			break
-		case "6":	//WATERLEVEL(C79) reg61 .. 6f
+		case "7":	//WATERLEVEL(C79) reg71 .. 7f
 			sdevstau = ss.substring(12,16);			//reg type	
 			if(!(sdevreg in xpdjobj.PDDATA.Devtab[sdevpos]["C79"]["chtab"]))return
 			xpdjobj.PDDATA.Devtab[sdevpos]["C79"]["chtab"][sdevreg].sub = Number("0x"+sdevsubcmd)
@@ -858,28 +1030,28 @@ function devalarmbuff(alarmcmd){//fcc10681019f010381
 	};
 	
 	switch(sdevreg){
-		case "71":	//CO2(C76)	#reg71
+		case "91":	//CO2(C76)	#reg91
 			sdevstau = ss.substring(12,16);			//reg type	
 			if(!(sdevreg in xpdjobj.PDDATA.Devtab[sdevpos]["C76"]["chtab"]))return
 			xpdjobj.PDDATA.Devtab[sdevpos]["C76"]["chtab"][sdevreg].sub = Number("0x"+sdevsubcmd)
 			xpdjobj.PDDATA.Devtab[sdevpos]["C76"]["chtab"][sdevreg].stu = Number("0x"+sdevstau);	
 			//send alarm to webserver ....	
 			break
-		case "72":	//RH(C78)	#reg72
+		case "92":	//RH(C78)	#reg92
 			sdevstau = ss.substring(12,16);			//reg type	
 			if(!(sdevreg in xpdjobj.PDDATA.Devtab[sdevpos]["C78"]["chtab"]))return
 			xpdjobj.PDDATA.Devtab[sdevpos]["C78"]["chtab"][sdevreg].sub = Number("0x"+sdevsubcmd)
 			xpdjobj.PDDATA.Devtab[sdevpos]["C78"]["chtab"][sdevreg].stu = Number("0x"+sdevstau);		
 			//send alarm to webserver ....
 			break
-		case "73":	//PH(C7B)   #reg73
+		case "93":	//PH(C7B)   #reg93
 			sdevstau = ss.substring(12,16);			//reg type	
 			if(!(sdevreg in xpdjobj.PDDATA.Devtab[sdevpos]["C7B"]["chtab"]))return
 			xpdjobj.PDDATA.Devtab[sdevpos]["C7B"]["chtab"][sdevreg].sub = Number("0x"+sdevsubcmd)
 			xpdjobj.PDDATA.Devtab[sdevpos]["C7B"]["chtab"][sdevreg].stu = Number("0x"+sdevstau);	
 			//send alarm to webserver ....	
 			break
-		case "74":	//ELECTRONS(C7A)#reg74
+		case "94":	//ELECTRONS(C7A)#reg94
 			sdevstau = ss.substring(12,16);			//reg type	
 			if(!(sdevreg in xpdjobj.PDDATA.Devtab[sdevpos]["C7A"]["chtab"]))return
 			xpdjobj.PDDATA.Devtab[sdevpos]["C7A"]["chtab"][sdevreg].sub = Number("0x"+sdevsubcmd)
@@ -890,8 +1062,6 @@ function devalarmbuff(alarmcmd){//fcc10681019f010381
 			return 
 			
 	}
-	
-	
 	
 	// if(sdevadd == "C1" && sdevcmd == "81"){
 		// tokeypadoutbuff(alarmcmd);		
@@ -919,13 +1089,13 @@ function devalarmbuff(alarmcmd){//fcc10681019f010381
         // console.log("uuids = ", setuuid);		
 // });
 
-treescan_load(function(){
-        console.log("jtreescan ver = ", jtreescan.treever);			
-});
+// treescan_load(function(){
+        // console.log("jtreescan ver = ", jtreescan.treever);			
+// });
 
-treedata_load(function(){
-        console.log("jtreedata ver = ", jtreedata.treever);			
-});
+// treedata_load(function(){
+        // console.log("jtreedata ver = ", jtreedata.treever);			
+// });
 
 jautocmd_load(function(){
 		console.log("jautocmd ver =",jautocmd.AUTOSN);		
@@ -958,12 +1128,12 @@ exports.sysload = sysload
 exports.sysupdate = sysupdate
 
 //treescan.txt    	jtreescan
-exports.treescan_load = treescan_load
-exports.treescan_update = treescan_update
+// exports.treescan_load = treescan_load
+// exports.treescan_update = treescan_update
 
 //treedata.txt 		jtreedata
-exports.treedata_load = treedata_load
-exports.treedata_update = treedata_update
+// exports.treedata_load = treedata_load
+// exports.treedata_update = treedata_update
 
 //JAUTOCMD.txt 		jautocmd
 exports.jautocmd_load = jautocmd_load

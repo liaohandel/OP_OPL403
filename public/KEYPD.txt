@@ -1,5 +1,5 @@
 {
-  "KEYVER": "OPF408x2_180729",
+  "KEYVER": "OPF403_20181012x1",
   "KEYPADCOUNT": 2,
   "KEYLIB": {  
     "KEYPAD0": {
@@ -15,32 +15,44 @@
           "stmask": ["OFF","ON"]
         },
         "EVENT": {
-          "ON":  [{"CMD":"PWM","POS":"E001","Action":"ON","STU":"000000","GROUP":"F1" }],
-          "OFF": [{"CMD":"PWM","POS":"E001","Action":"OFF","STU":"000000","GROUP":"F1"}]
+          "ON":  [
+			{"CMD":"PWM","POS":"E001","Action":"ON","STU":"000000","GROUP":"FF" }
+			],
+          "OFF": [
+			{"CMD":"PWM","POS":"E001","Action":"OFF","STU":"000000","GROUP":"FF"},
+			{"CMD":"PUMP","POS":"E002","Action":"SET","STU":"EE0000","GROUP":"00"},
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"OFF","GROUP":"K002"}
+		  ]
         }
       },
       "K002": {
         "STATUS": {
-          "stcnt": 1,
+          "stcnt": 2,
           "stpt": 0,
           "stmask": ["OFF","ON"]
         },
         "EVENT": {
           "ON":  [
-			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"ON","GROUP":"K003"},
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"AUTO","GROUP":"K003"},
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"AUTO","GROUP":"K012"},
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"AUTO","GROUP":"K015"},
 			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"AUTO","GROUP":"K004"},
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"ON","GROUP":"K008"},
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"ON","GROUP":"K009"},
 			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"AUTO","GROUP":"K005"},
-			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"AUTO","GROUP":"K006"},
-			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"AUTO","GROUP":"K007"},
-			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"AUTO","GROUP":"K008"}
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"ON","GROUP":"K007"},
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"OFF","GROUP":"K006"}
 			],
           "OFF": [
 			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"OFF","GROUP":"K003"},
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"OFF","GROUP":"K012"},
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"OFF","GROUP":"K015"},
 			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"OFF","GROUP":"K004"},
-			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"OFF","GROUP":"K005"},
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"OFF","GROUP":"K008"},
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"OFF","GROUP":"K009"},
 			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"OFF","GROUP":"K006"},
 			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"OFF","GROUP":"K007"},
-			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"OFF","GROUP":"K008"}
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"OFF","GROUP":"K005"}
 		  ]
         }
       },
@@ -48,149 +60,133 @@
         "STATUS": {
           "stcnt": 5,
           "stpt": 0,
-          "stmask": [
-            "AUTO",
-            "ON",
-            "HI",
-            "LOW",
-            "OFF"
-          ]
+          "stmask": ["AUTO","ON","HI","LOW","OFF"]
         },
         "EVENT": {
           "AUTO": [
 				{"CMD":"REGCMD/AUTOSETUP","POS":"GROWLED","Action":"AUTO","STU":"01","GROUP":"00" },
 				{"CMD":"REGCMD/AUTOSETUP","POS":"LEDHI","Action":"AUTO","STU":"00","GROUP":"00" },
-				{"CMD":"REGCMD/AUTOSETUP","POS":"LEDLOW","Action":"AUTO","STU":"00","GROUP":"00" }
+				{"CMD":"REGCMD/AUTOSETUP","POS":"LEDLOW","Action":"AUTO","STU":"00","GROUP":"00" },
+				{"CMD":"LED","POS":"A001","Action":"ON","STU":"221388","GROUP":"00" },
+				{"CMD":"LED","POS":"A002","Action":"ON","STU":"211388","GROUP":"00" },
+				{"CMD":"LED","POS":"A021","Action":"ON","STU":"221388","GROUP":"00" },
+				{"CMD":"LED","POS":"A022","Action":"ON","STU":"211388","GROUP":"00" }
 			],
           "ON": [
 				{"CMD":"REGCMD/AUTOSETUP","POS":"GROWLED","Action":"AUTO","STU":"00","GROUP":"00" },
 				{"CMD":"REGCMD/AUTOSETUP","POS":"LEDHI","Action":"AUTO","STU":"00","GROUP":"00" },
 				{"CMD":"REGCMD/AUTOSETUP","POS":"LEDLOW","Action":"AUTO","STU":"00","GROUP":"00" },
-				{"CMD":"LED","POS":"A001","Action":"ON","STU":"200000","GROUP":"0A" },
-				{"CMD":"LED","POS":"A001","Action":"ON","STU":"200000","GROUP":"0B" },
-				{"CMD":"LED","POS":"A001","Action":"ON","STU":"200000","GROUP":"0C" },
-				{"CMD":"LED","POS":"A001","Action":"ON","STU":"200000","GROUP":"0D" }
+				{"CMD":"LED","POS":"A001","Action":"ON","STU":"221388","GROUP":"00" },
+				{"CMD":"LED","POS":"A002","Action":"ON","STU":"211388","GROUP":"00" },
+				{"CMD":"LED","POS":"A021","Action":"ON","STU":"221388","GROUP":"00" },
+				{"CMD":"LED","POS":"A022","Action":"ON","STU":"211388","GROUP":"00" }
 			],
           "HI": [
 				{"CMD":"REGCMD/AUTOSETUP","POS":"GROWLED","Action":"AUTO","STU":"00","GROUP":"00" },
+				{"CMD":"REGCMD/AUTOSETUP","POS":"LEDHI","Action":"AUTO","STU":"01","GROUP":"00" },
 				{"CMD":"REGCMD/AUTOSETUP","POS":"LEDLOW","Action":"AUTO","STU":"00","GROUP":"00" },
-				{"CMD":"REGCMD/AUTOSETUP","POS":"LEDHI","Action":"AUTO","STU":"00","GROUP":"00" },
-				{"CMD":"LED","POS":"A001","Action":"ON","STU":"200020","GROUP":"0A" },
-				{"CMD":"LED","POS":"A001","Action":"ON","STU":"200020","GROUP":"0B" },
-				{"CMD":"LED","POS":"A001","Action":"ON","STU":"200020","GROUP":"0C" },
-				{"CMD":"LED","POS":"A001","Action":"ON","STU":"200020","GROUP":"0D" }
+				{"CMD":"LED","POS":"A001","Action":"ON","STU":"221388","GROUP":"00" },
+				{"CMD":"LED","POS":"A002","Action":"ON","STU":"211388","GROUP":"00" },
+				{"CMD":"LED","POS":"A021","Action":"ON","STU":"221388","GROUP":"00" },
+				{"CMD":"LED","POS":"A022","Action":"ON","STU":"211388","GROUP":"00" }
 			],
           "LOW": [
 				{"CMD":"REGCMD/AUTOSETUP","POS":"GROWLED","Action":"AUTO","STU":"00","GROUP":"00" },
 				{"CMD":"REGCMD/AUTOSETUP","POS":"LEDHI","Action":"AUTO","STU":"00","GROUP":"00" },
-				{"CMD":"REGCMD/AUTOSETUP","POS":"LEDLOW","Action":"AUTO","STU":"00","GROUP":"00" },
-				{"CMD":"LED","POS":"A001","Action":"ON","STU":"200040","GROUP":"0A" },
-				{"CMD":"LED","POS":"A001","Action":"ON","STU":"200040","GROUP":"0B" },
-				{"CMD":"LED","POS":"A001","Action":"ON","STU":"200040","GROUP":"0C" },
-				{"CMD":"LED","POS":"A001","Action":"ON","STU":"200040","GROUP":"0D" }
+				{"CMD":"REGCMD/AUTOSETUP","POS":"LEDLOW","Action":"AUTO","STU":"01","GROUP":"00" },
+				{"CMD":"LED","POS":"A001","Action":"ON","STU":"221388","GROUP":"00" },
+				{"CMD":"LED","POS":"A002","Action":"ON","STU":"211388","GROUP":"00" },
+				{"CMD":"LED","POS":"A021","Action":"ON","STU":"221388","GROUP":"00" },
+				{"CMD":"LED","POS":"A022","Action":"ON","STU":"211388","GROUP":"00" }
 			],
           "OFF": [
 				{"CMD":"REGCMD/AUTOSETUP","POS":"GROWLED","Action":"AUTO","STU":"00","GROUP":"00" },
 				{"CMD":"REGCMD/AUTOSETUP","POS":"LEDHI","Action":"AUTO","STU":"00","GROUP":"00" },
 				{"CMD":"REGCMD/AUTOSETUP","POS":"LEDLOW","Action":"AUTO","STU":"00","GROUP":"00" },
-				{"CMD":"LED","POS":"A001","Action":"OFF","STU":"200000","GROUP":"0A" },
-				{"CMD":"LED","POS":"A001","Action":"OFF","STU":"200000","GROUP":"0B" },
-				{"CMD":"LED","POS":"A001","Action":"OFF","STU":"200000","GROUP":"0C" },
-				{"CMD":"LED","POS":"A001","Action":"OFF","STU":"200000","GROUP":"0D" }
+				{"CMD":"LED","POS":"A001","Action":"OFF","STU":"220001","GROUP":"00" },
+				{"CMD":"LED","POS":"A002","Action":"OFF","STU":"210001","GROUP":"00" },
+				{"CMD":"LED","POS":"A021","Action":"OFF","STU":"220001","GROUP":"00" },
+				{"CMD":"LED","POS":"A022","Action":"OFF","STU":"210001","GROUP":"00" }
 			]
         }
       },
       "K004": {
         "STATUS": {
-          "stcnt": 2,
+          "stcnt": 3,
           "stpt": 0,
-          "stmask": [
-            "AUTO",
-            "ON",
-            "OFF"
-          ]
+          "stmask": ["AUTO","ON","OFF"]
         },
         "EVENT": {
           "AUTO": [
 			{"CMD":"REGCMD/AUTOSETUP","POS":"CYCLEFAN","Action":"AUTO","STU":"01","GROUP":"00" },
-			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"580000","GROUP":"00" }],
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"5B0000","GROUP":"00" }],
           "ON": [
 			{"CMD":"REGCMD/AUTOSETUP","POS":"CYCLEFAN","Action":"AUTO","STU":"00","GROUP":"00" },
-			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"580000","GROUP":"00" }],
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"5B0000","GROUP":"00" }],
           "OFF": [
 			{"CMD":"REGCMD/AUTOSETUP","POS":"CYCLEFAN","Action":"AUTO","STU":"00","GROUP":"00" },
-			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"580000","GROUP":"00" }]
+			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"5B0000","GROUP":"00" }]
         }
       },	  
       "K005": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "AUTO",
-            "ON",
-            "OFF"
+          "stmask": ["AUTO","ON","OFF"
           ]
         },
         "EVENT": {
-          "AUTO": [
-			{"CMD":"REGCMD/AUTOSETUP","POS":"REFRESH","Action":"AUTO","STU":"01","GROUP":"00" },
-			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"5A0000","GROUP":"00" }],
+          "AUTO": [			
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"580000","GROUP":"00" },
+			{"CMD":"REGCMD/AUTOSETUP","POS":"REFRESH","Action":"AUTO","STU":"01","GROUP":"00" }
+			],
           "ON": [
-			{"CMD":"REGCMD/AUTOSETUP","POS":"REFRESH","Action":"AUTO","STU":"00","GROUP":"00" },
-			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"5A0000","GROUP":"00" }],
-          "OFF": [
-			{"CMD":"REGCMD/AUTOSETUP","POS":"REFRESH","Action":"AUTO","STU":"00","GROUP":"00" },
-			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"5A0000","GROUP":"00" }]
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"580000","GROUP":"00" },
+			{"CMD":"REGCMD/AUTOSETUP","POS":"REFRESH","Action":"AUTO","STU":"00","GROUP":"00" }
+			],
+          "OFF": [			
+			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"580000","GROUP":"00" },
+			{"CMD":"REGCMD/AUTOSETUP","POS":"REFRESH","Action":"AUTO","STU":"00","GROUP":"00" }
+			]
         }
       },	  
       "K006": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "AUTO",
-            "ON",
-            "OFF"
-          ]
+          "stmask": ["AUTO","ON","OFF"]
         },
         "EVENT": {
           "AUTO": [
 			{"CMD":"REGCMD/AUTOSETUP","POS":"UV","Action":"AUTO","STU":"01","GROUP":"10" },
-			{"CMD":"UV","POS":"G001","Action":"OFF","STU":"410000","GROUP":"10" }],
+			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"660000","GROUP":"00" }
+			],
           "ON": [
 			{"CMD":"REGCMD/AUTOSETUP","POS":"UV","Action":"AUTO","STU":"00","GROUP":"00" },
-			{"CMD":"UV","POS":"G001","Action":"ON","STU":"410000","GROUP":"10" }],
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"660000","GROUP":"00" }],
           "OFF": [
 			{"CMD":"REGCMD/AUTOSETUP","POS":"UV","Action":"AUTO","STU":"00","GROUP":"00" },
-			{"CMD":"UV","POS":"G001","Action":"OFF","STU":"4100000","GROUP":"10" }]
+			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"6600000","GROUP":"00" }]
         }
       },	  
       "K007": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "AUTO",
-            "ON",
-            "OFF"
-          ]
+          "stmask": ["AUTO","ON","OFF"]
         },
         "EVENT": {
           "AUTO": [
 			{"CMD":"REGCMD/AUTOSETUP","POS":"PUMP","Action":"AUTO","STU":"01","GROUP":"00" },
-			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"4D0000","GROUP":"00" },
-			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"4F0000","GROUP":"00" }
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"9C00E10384","GROUP":"00" }
 			],
           "ON": [
 			{"CMD":"REGCMD/AUTOSETUP","POS":"PUMP","Action":"AUTO","STU":"00","GROUP":"00" },
-			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"4D0000","GROUP":"00" },
-			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"4F0000","GROUP":"00" }
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"9C00E10384","GROUP":"00" }
 			],
           "OFF": [
 			{"CMD":"REGCMD/AUTOSETUP","POS":"PUMP","Action":"AUTO","STU":"00","GROUP":"00" },
-			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"4D0000","GROUP":"00" },
-			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"4F0000","GROUP":"00" }
+			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"9C00000000","GROUP":"00" }
 			]
         }
       },	  
@@ -198,27 +194,16 @@
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "AUTO",
-            "ON",
-            "OFF"
-          ]
+          "stmask": ["OFF","ON"]
         },
         "EVENT": {
-          "AUTO": [
-			{"CMD":"REGCMD/AUTOSETUP","POS":"PUMP","Action":"AUTO","STU":"01","GROUP":"00" },
-			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"4D0000","GROUP":"00" },
-			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"4F0000","GROUP":"00" }
-			],
           "ON": [
-			{"CMD":"REGCMD/AUTOSETUP","POS":"PUMP","Action":"AUTO","STU":"00","GROUP":"00" },
-			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"4D0000","GROUP":"00" },
-			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"4F0000","GROUP":"00" }
+			{"CMD":"REGCMD/AUTOSETUP","POS":"BOX2LOOP","Action":"AUTO","STU":"03","GROUP":"00" },
+			{"CMD":"REGCMD/AUTOSETUP","POS":"ECDOSELOOP","Action":"AUTO","STU":"03","GROUP":"00" }
 			],
           "OFF": [
-			{"CMD":"REGCMD/AUTOSETUP","POS":"PUMP","Action":"AUTO","STU":"00","GROUP":"00" },
-			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"4D0000","GROUP":"00" },
-			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"4F0000","GROUP":"00" }
+			{"CMD":"REGCMD/AUTOSETUP","POS":"BOX2LOOP","Action":"AUTO","STU":"02","GROUP":"00" },
+			{"CMD":"REGCMD/AUTOSETUP","POS":"ECDOSELOOP","Action":"AUTO","STU":"02","GROUP":"00" }
 			]
         }
       },	  
@@ -226,17 +211,15 @@
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "ON",
-            "OFF"
+          "stmask": ["ON","OFF"
           ]
         },
         "EVENT": {
           "ON":  [
-			{"CMD":"PUMP","POS":"J005","Action":"ON","STU":"410000","GROUP":"0E" }
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"5A0000","GROUP":"00" }
 			],
           "OFF": [
-			{"CMD":"PUMP","POS":"J005","Action":"OFF","STU":"410000","GROUP":"0E" }
+			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"5A0000","GROUP":"00" }
 			]
         }
       },	  
@@ -244,17 +227,15 @@
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "ON",
-            "OFF"
+          "stmask": ["ON","OFF"
           ]
         },
         "EVENT": {
           "ON":  [
-			{"CMD":"PUMP","POS":"J005","Action":"ON","STU":"410000","GROUP":"0E" }
+			{"CMD":"REGCMD/AUTOSETUP","POS":"0000","Action":"SET","STU":"00","GROUP":"00" }
 			],
           "OFF": [
-			{"CMD":"PUMP","POS":"J005","Action":"OFF","STU":"410000","GROUP":"0E" }
+			{"CMD":"REGCMD/AUTOSETUP","POS":"0000","Action":"SET","STU":"00","GROUP":"00" }
 			]
         }
       },	  
@@ -262,21 +243,439 @@
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "ON",
-            "OFF"
-          ]
+          "stmask": ["ON","OFF"]
         },
         "EVENT": {
           "ON":  [
-			{"CMD":"PUMP","POS":"J005","Action":"ON","STU":"410000","GROUP":"0E" }
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"LOW","GROUP":"K003"}
 			],
           "OFF": [
-			{"CMD":"PUMP","POS":"J005","Action":"OFF","STU":"410000","GROUP":"0E" }
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"AUTO","GROUP":"K003"}
 			]
         }
-      }
+      },
 	  
+	  "K012": {
+        "STATUS": {
+          "stcnt": 3,
+          "stpt": 0,
+          "stmask": ["AUTO","ON","OFF"]
+        },
+        "EVENT": {
+          "AUTO": [
+			{"CMD":"REGCMD/AUTOSETUP","POS":"autotmloop","Action":"AUTO","STU":"03","GROUP":"00" },
+			{"CMD":"REGCMD/AUTOSETUP","POS":"AIRRH","Action":"AUTO","STU":"00","GROUP":"00" },
+			{"CMD":"REGCMD/AUTOSETUP","POS":"AIRCON","Action":"AUTO","STU":"00","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"680000","GROUP":"00" }
+			],
+          "ON": [
+			{"CMD":"REGCMD/AUTOSETUP","POS":"autotmloop","Action":"AUTO","STU":"02","GROUP":"00" },
+			{"CMD":"REGCMD/AUTOSETUP","POS":"AIRRH","Action":"AUTO","STU":"00","GROUP":"00" },
+			{"CMD":"REGCMD/AUTOSETUP","POS":"AIRCON","Action":"AUTO","STU":"00","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"680000","GROUP":"00" }
+			],
+          "OFF": [
+			{"CMD":"REGCMD/AUTOSETUP","POS":"autotmloop","Action":"AUTO","STU":"02","GROUP":"00" },
+			{"CMD":"REGCMD/AUTOSETUP","POS":"AIRRH","Action":"AUTO","STU":"00","GROUP":"00" },
+			{"CMD":"REGCMD/AUTOSETUP","POS":"AIRCON","Action":"AUTO","STU":"00","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"680000","GROUP":"00" }
+			]
+        }
+      },
+	  "K013": {
+        "STATUS": {
+          "stcnt": 3,
+          "stpt": 0,
+          "stmask": ["AUTO","ON","OFF"]
+        },
+        "EVENT": {
+          "AUTO": [
+			{"CMD":"REGCMD/AUTOSETUP","POS":"AIRRH","Action":"AUTO","STU":"01","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"680000","GROUP":"00" }
+			],
+          "ON": [
+			{"CMD":"REGCMD/AUTOSETUP","POS":"AIRRH","Action":"AUTO","STU":"00","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"680000","GROUP":"00" }
+			],
+          "OFF": [
+			{"CMD":"REGCMD/AUTOSETUP","POS":"AIRRH","Action":"AUTO","STU":"00","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"680000","GROUP":"00" }
+			]
+        }
+      },
+	  "K014": {
+        "STATUS": {
+          "stcnt": 3,
+          "stpt": 0,
+          "stmask": ["AUTO","ON","OFF"]
+        },
+        "EVENT": {
+          "AUTO": [
+			{"CMD":"REGCMD/AUTOSETUP","POS":"ECDOSE","Action":"AUTO","STU":"00","GROUP":"00" }
+			],
+          "ON": [
+			{"CMD":"REGCMD/AUTOSETUP","POS":"ECDOSE","Action":"AUTO","STU":"00","GROUP":"00" }
+		  ],
+          "OFF": [
+			{"CMD":"REGCMD/AUTOSETUP","POS":"ECDOSE","Action":"AUTO","STU":"00","GROUP":"00" }
+		  ]
+        }
+      },
+	  "K015": {
+        "STATUS": {
+          "stcnt": 3,
+          "stpt": 0,
+          "stmask": ["AUTO","ON","OFF"]
+        },
+        "EVENT": {
+          "AUTO": [
+			{"CMD":"REGCMD/AUTOSETUP","POS":"CO2","Action":"AUTO","STU":"01","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"590000","GROUP":"00" }],
+          "ON": [
+			{"CMD":"REGCMD/AUTOSETUP","POS":"CO2","Action":"AUTO","STU":"00","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"590000","GROUP":"00" }],
+          "OFF": [
+			{"CMD":"REGCMD/AUTOSETUP","POS":"CO2","Action":"AUTO","STU":"00","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"590000","GROUP":"00" }]
+        }
+      },
+	  "K016": {
+        "STATUS": {
+          "stcnt": 2,
+          "stpt": 0,
+          "stmask": ["AUTO","OFF"]
+        },
+        "EVENT": {
+		"AUTO": [
+		],
+          "OFF": [
+		]
+        }
+      },
+	  "K017": {
+        "STATUS": {
+          "stcnt": 3,
+          "stpt": 0,
+          "stmask": ["AUTO","ON","OFF"]
+        },
+        "EVENT": {
+          "AUTO": [
+			{"CMD":"REGCMD/AUTOSETUP","POS":"SPRAY","Action":"AUTO","STU":"01","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"420000","GROUP":"00" }
+		  ],
+          "ON": [
+			{"CMD":"REGCMD/AUTOSETUP","POS":"SPRAY","Action":"AUTO","STU":"00","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"420000","GROUP":"00" }
+			],
+          "OFF": [
+			{"CMD":"REGCMD/AUTOSETUP","POS":"SPRAY","Action":"AUTO","STU":"00","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"420000","GROUP":"00" }]
+        }
+      },
+	  "K018": {
+        "STATUS": {
+          "stcnt": 6,
+          "stpt": 0,
+          "stmask": ["AUTO","ON","OFF","PH70","PH40","EC70"]
+        },
+        "EVENT": {
+          "AUTO": [
+			{"CMD":"REGCMD/AUTOSETUP","POS":"ECDOSE","Action":"AUTO","STU":"01","GROUP":"00" },
+			{"CMD":"REGCMD/AUTOSETUP","POS":"PHDOSE","Action":"AUTO","STU":"01","GROUP":"00" }
+			],
+		  "ON": [
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"440000","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"450000","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"460000","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"610000","GROUP":"00" }
+			],
+          "OFF": [
+			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"440000","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"450000","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"460000","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"610000","GROUP":"00" },
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"OFF","GROUP":"K017"},
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"OFF","GROUP":"K014"},
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"OFF","GROUP":"K020"},
+			{"CMD":"REGCMD/AUTOSETUP","POS":"DOSEA","Action":"AUTO","STU":"00","GROUP":"00" },
+			{"CMD":"REGCMD/AUTOSETUP","POS":"DOSEB","Action":"AUTO","STU":"00","GROUP":"00" },
+			{"CMD":"REGCMD/AUTOSETUP","POS":"DOSEC","Action":"AUTO","STU":"00","GROUP":"00" },
+			{"CMD":"REGCMD/AUTOSETUP","POS":"DOSED","Action":"AUTO","STU":"00","GROUP":"00" }
+			],
+          "PH70": [
+			{"CMD":"PH","POS":"E002","Action":"ON","STU":"9302BC","GROUP":"00" }
+		  ],
+          "PH40": [
+			{"CMD":"PH","POS":"E002","Action":"ON","STU":"930190","GROUP":"00" }
+		  ],
+          "EC70": [
+			{"CMD":"ELECTRONS","POS":"E002","Action":"ON","STU":"940000","GROUP":"00" }
+		  ]
+        }
+      },
+	  "K019": {
+        "STATUS": {
+          "stcnt": 3,
+          "stpt": 0,
+          "stmask": ["AUTO","ON","OFF"]
+        },
+        "EVENT": {
+          "AUTO": [
+			{"CMD":"REGCMD/AUTOSETUP","POS":"OPWAVE","Action":"AUTO","STU":"01","GROUP":"00" },
+			{"CMD":"LED","POS":"G010","Action":"OFF","STU":"200000","GROUP":"00" }
+		  ],
+          "ON": [
+			{"CMD":"REGCMD/AUTOSETUP","POS":"OPWAVE","Action":"AUTO","STU":"00","GROUP":"00" },
+			{"CMD":"LED","POS":"G010","Action":"ON","STU":"200000","GROUP":"00" }
+			],
+          "OFF": [
+			{"CMD":"REGCMD/AUTOSETUP","POS":"OPWAVE","Action":"AUTO","STU":"00","GROUP":"00" },
+			{"CMD":"LED","POS":"G010","Action":"OFF","STU":"200000","GROUP":"00" }]
+        }
+      },
+	  "K020": {
+        "STATUS": {
+          "stcnt": 1,
+          "stpt": 0,
+          "stmask": ["AUTO"]
+        },
+        "EVENT": {
+          "AUTO": [
+			{"CMD":"REGCMD/AUTOSETUP","POS":"PHDOSE","Action":"AUTO","STU":"01","GROUP":"00" }
+			],
+          "ON": [
+			{"CMD":"REGCMD/AUTOSETUP","POS":"PHDOSE","Action":"AUTO","STU":"00","GROUP":"00" }
+		  ],
+          "OFF": [
+			{"CMD":"REGCMD/AUTOSETUP","POS":"PHDOSE","Action":"AUTO","STU":"00","GROUP":"00" }
+		  ]
+        }
+      },
+	  "K021": {
+        "STATUS": {
+          "stcnt": 5,
+          "stpt": 0,
+          "stmask": ["ON25","ON50","ON75","ON100","OFF100"]
+        },
+        "EVENT": {
+          "ON25": [
+			{"CMD":"LED","POS":"A003","Action":"ON","STU":"2207D0","GROUP":"00" },
+			{"CMD":"LED","POS":"A001","Action":"SET","STU":"2207D0","GROUP":"00" },
+			{"CMD":"LED","POS":"A021","Action":"SET","STU":"2207D0","GROUP":"00" },
+			{"CMD":"LED","POS":"A023","Action":"ON","STU":"2207D0","GROUP":"00" }
+		  ],
+          "ON50": [
+			{"CMD":"LED","POS":"A003","Action":"ON","STU":"220BB8","GROUP":"00" },
+			{"CMD":"LED","POS":"A001","Action":"SET","STU":"220BB8","GROUP":"00" },
+			{"CMD":"LED","POS":"A021","Action":"SET","STU":"220BB8","GROUP":"00" },
+			{"CMD":"LED","POS":"A023","Action":"ON","STU":"220BB8","GROUP":"00" }
+		  ],
+          "ON75": [
+			{"CMD":"LED","POS":"A003","Action":"ON","STU":"220FA0","GROUP":"00" },
+			{"CMD":"LED","POS":"A001","Action":"SET","STU":"220FA0","GROUP":"00" },
+			{"CMD":"LED","POS":"A021","Action":"SET","STU":"220FA0","GROUP":"00" },
+			{"CMD":"LED","POS":"A023","Action":"ON","STU":"220FA0","GROUP":"00" }
+			],
+          "ON100": [
+			{"CMD":"LED","POS":"A003","Action":"ON","STU":"221388","GROUP":"00" },
+			{"CMD":"LED","POS":"A001","Action":"SET","STU":"221388","GROUP":"00" },
+			{"CMD":"LED","POS":"A021","Action":"SET","STU":"221388","GROUP":"00" },
+			{"CMD":"LED","POS":"A023","Action":"ON","STU":"221388","GROUP":"00" }
+			],
+          "OFF100": [
+			{"CMD":"LED","POS":"A002","Action":"OFF","STU":"220001","GROUP":"00" },
+			{"CMD":"LED","POS":"A022","Action":"OFF","STU":"220001","GROUP":"00" }
+			]
+        }
+      },
+	  "K022": {
+        "STATUS": {
+          "stcnt": 4,
+          "stpt": 0,
+          "stmask": ["RFAN01","RFAN02","RFAN04","RFAN06"]
+        },
+        "EVENT": {
+          "RFAN01": [
+			{"CMD":"AIRFAN","POS":"B001","Action":"SET","STU":"000001","GROUP":"00" },
+			{"CMD":"AIRFAN","POS":"B002","Action":"SET","STU":"000000","GROUP":"00" },
+			{"CMD":"AIRFAN","POS":"B003","Action":"SET","STU":"000000","GROUP":"00" },
+			{"CMD":"AIRFAN","POS":"B004","Action":"SET","STU":"000000","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"580000","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"570000","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"560000","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"550000","GROUP":"00" }
+		  ],
+          "RFAN02": [
+			{"CMD":"AIRFAN","POS":"B001","Action":"SET","STU":"000001","GROUP":"00" },
+			{"CMD":"AIRFAN","POS":"B002","Action":"SET","STU":"000001","GROUP":"00" },
+			{"CMD":"AIRFAN","POS":"B003","Action":"SET","STU":"000000","GROUP":"00" },
+			{"CMD":"AIRFAN","POS":"B004","Action":"SET","STU":"000000","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"580000","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"570000","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"560000","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"550000","GROUP":"00" }
+		  ],
+          "RFAN04": [
+			{"CMD":"AIRFAN","POS":"B001","Action":"SET","STU":"000001","GROUP":"00" },
+			{"CMD":"AIRFAN","POS":"B002","Action":"SET","STU":"000001","GROUP":"00" },
+			{"CMD":"AIRFAN","POS":"B003","Action":"SET","STU":"000001","GROUP":"00" },
+			{"CMD":"AIRFAN","POS":"B004","Action":"SET","STU":"000000","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"580000","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"570000","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"560000","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"550000","GROUP":"00" }
+		  ],
+          "RFAN06": [
+			{"CMD":"AIRFAN","POS":"B001","Action":"SET","STU":"000001","GROUP":"00" },
+			{"CMD":"AIRFAN","POS":"B002","Action":"SET","STU":"000001","GROUP":"00" },
+			{"CMD":"AIRFAN","POS":"B003","Action":"SET","STU":"000001","GROUP":"00" },
+			{"CMD":"AIRFAN","POS":"B004","Action":"SET","STU":"000001","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"580000","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"570000","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"560000","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"550000","GROUP":"00" }
+		  ]
+        }
+      },
+	  "K023": {
+        "STATUS": {
+          "stcnt": 1,
+          "stpt": 0,
+          "stmask": ["OFF100"]
+        },
+        "EVENT": {
+          "OFF100": [
+			{"CMD":"LED","POS":"A001","Action":"OFF","STU":"210000","GROUP":"00" },
+			{"CMD":"LED","POS":"A002","Action":"OFF","STU":"220000","GROUP":"00" },
+			{"CMD":"LED","POS":"A021","Action":"OFF","STU":"210000","GROUP":"00" },
+			{"CMD":"LED","POS":"A022","Action":"OFF","STU":"220000","GROUP":"00" }
+			]
+        }
+      },
+	  "K024": {
+        "STATUS": {
+          "stcnt": 5,
+          "stpt": 0,
+          "stmask": ["RON25","RON50","RON75","RON100","ROFF100"]
+        },
+        "EVENT": {
+          "RON25": [
+			{"CMD":"LED","POS":"A003","Action":"ON","STU":"2107D0","GROUP":"00" },
+			{"CMD":"LED","POS":"A002","Action":"SET","STU":"2107D0","GROUP":"00" },
+			{"CMD":"LED","POS":"A022","Action":"SET","STU":"2107D0","GROUP":"00" },
+			{"CMD":"LED","POS":"A023","Action":"ON","STU":"2107D0","GROUP":"00" }
+		  ],
+          "RON50": [
+			{"CMD":"LED","POS":"A003","Action":"ON","STU":"210BB8","GROUP":"00" },
+			{"CMD":"LED","POS":"A002","Action":"SET","STU":"210BB8","GROUP":"00" },
+			{"CMD":"LED","POS":"A022","Action":"SET","STU":"210BB8","GROUP":"00" },
+			{"CMD":"LED","POS":"A023","Action":"ON","STU":"210BB8","GROUP":"00" }
+		  ],
+          "RON75": [
+			{"CMD":"LED","POS":"A003","Action":"ON","STU":"210BB8","GROUP":"00" },
+			{"CMD":"LED","POS":"A002","Action":"SET","STU":"210FA0","GROUP":"00" },
+			{"CMD":"LED","POS":"A022","Action":"SET","STU":"210FA0","GROUP":"00" },
+			{"CMD":"LED","POS":"A023","Action":"ON","STU":"210FA0","GROUP":"00" }
+			],
+          "RON100": [
+			{"CMD":"LED","POS":"A003","Action":"ON","STU":"211388","GROUP":"00" },
+			{"CMD":"LED","POS":"A002","Action":"SET","STU":"211388","GROUP":"00" },
+			{"CMD":"LED","POS":"A022","Action":"SET","STU":"211388","GROUP":"00" },
+			{"CMD":"LED","POS":"A023","Action":"ON","STU":"211388","GROUP":"00" }
+			],
+          "ROFF100": [
+			{"CMD":"LED","POS":"A002","Action":"OFF","STU":"210001","GROUP":"00" },
+			{"CMD":"LED","POS":"A022","Action":"OFF","STU":"210001","GROUP":"00" }
+			]
+        }
+      },
+	  
+	  "K030": {
+        "STATUS": {
+          "stcnt": 10,
+          "stpt": 0,
+          "stmask": ["AUTO","OFF","MALEDAUTO","MALEDUP","MALEDDOWN","MALEDRST","MBLEDAUTO","MBLEDUP","MBLEDDOWN","MBLEDRST"]
+        },
+        "EVENT": {
+          "AUTO": [],
+          "OFF": [],
+          "MALEDAUTO": [],
+          "MALEDUP": [],
+          "MALEDDOWN": [],
+          "MALEDRST": [],
+          "MBLEDAUTO": [],
+          "MBLEDUP": [],
+          "MBLEDDOWN": [],
+          "MBLEDRST": []
+        }
+      },
+	  "K031": {
+        "STATUS": {
+          "stcnt": 3,
+          "stpt": 0,
+          "stmask": ["AUTO","ON","OFF"]
+        },
+        "EVENT": {
+          "AUTO": [],
+          "ON": [],
+          "OFF": []
+        }
+      },
+	  "K032": {
+        "STATUS": {
+          "stcnt": 10,
+          "stpt": 0,
+          "stmask": ["AUTO","OFF","MALEDAUTO","MALEDUP","MALEDDOWN","MALEDRST","MBLEDAUTO","MBLEDUP","MBLEDDOWN","MBLEDRST"]
+        },
+        "EVENT": {
+          "AUTO": [],
+          "OFF": [],
+          "MALEDAUTO": [],
+          "MALEDUP": [],
+          "MALEDDOWN": [],
+          "MALEDRST": [],
+          "MBLEDAUTO": [],
+          "MBLEDUP": [],
+          "MBLEDDOWN": [],
+          "MBLEDRST": []
+        }
+      },
+	  "K033": {
+        "STATUS": {
+          "stcnt": 3,
+          "stpt": 0,
+          "stmask": ["AUTO","ON","OFF"]
+        },
+        "EVENT": {
+          "AUTO": [],
+          "ON": [],
+          "OFF": []
+        }
+      },
+	  "K034": {
+        "STATUS": {
+          "stcnt": 3,
+          "stpt": 0,
+          "stmask": ["AUTO","ON","OFF"]
+        },
+        "EVENT": {
+          "AUTO": [],
+          "ON": [],
+          "OFF": []
+        }
+      },
+	  "K035": {
+        "STATUS": {
+          "stcnt": 3,
+          "stpt": 0,
+          "stmask": ["AUTO","ON","OFF"]
+        },
+        "EVENT": {
+          "AUTO": [],
+          "ON": [],
+          "OFF": []
+        }
+      }
     },
 
     "KEYPAD1": {
@@ -289,10 +688,10 @@
         "STATUS": {"stcnt": 2,"stpt": 0,"stmask": [ "OFF","ON"]  },		 				
 		"EVENT": {
 				  "OFF": [
-					{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"320000","GROUP":"00" }
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"OFF","GROUP":"K012"}
 				  ],
 				  "ON": [
-					{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"320000","GROUP":"00" }
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"ON","GROUP":"K012"}
 				  ]
 		}	
       },
@@ -300,68 +699,66 @@
         "STATUS": {"stcnt": 2,"stpt": 0,"stmask": [  "OFF",  "ON"]        },
         "EVENT": {
 			"OFF": [
-            {"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"450000","GROUP":"00" }
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"OFF","GROUP":"K017"}
 			],
 			"ON": [
-            {"CMD":"PUMP","POS":"E002","Action":"ON","STU":"450000","GROUP":"00" }
-          ]
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"ON","GROUP":"K017"}
+			]
         }
       },
       "K093": {
         "STATUS": {"stcnt": 2,"stpt": 0,"stmask": [  "OFF",  "ON"]        },
         "EVENT": {
           "OFF": [  
-			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"580000","GROUP":"00" }
-          ],
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"OFF","GROUP":"K004"}
+			],
           "ON": [
-			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"580000","GROUP":"00" }
-          ]
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"ON","GROUP":"K004"}
+			]
         }
       },
       "K094": {
         "STATUS": {"stcnt": 2,"stpt": 0,"stmask": [  "OFF",  "ON"]        },
         "EVENT": {
           "OFF": [  
-			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"5A0000","GROUP":"00" }
-          ],
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"OFF","GROUP":"K005"}
+			],
           "ON": [
-			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"5A0000","GROUP":"00" }
-          ]
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"ON","GROUP":"K005"}
+			]
         }
       },
       "K095": {
         "STATUS": {"stcnt": 2,"stpt": 0,"stmask": [  "OFF",  "ON"]   },
         "EVENT": {
+          "ON":  [
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"ON","GROUP":"K001"}
+		  ],
           "OFF": [
-            {"CMD":"PUMP","POS":"J005","Action":"OFF","STU":"200000","GROUP":"0E" }
-		],
-          "ON": [
-            {"CMD":"PUMP","POS":"J005","Action":"ON","STU":"2000000","GROUP":"0E" }
-          ]
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"OFF","GROUP":"K001"}
+		  ]
         }
       },
       "K096": {
         "STATUS": {"stcnt": 2,"stpt": 0,"stmask": ["OFF","ON"] },
         "EVENT": {
           "OFF": [
-			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"4D0000","GROUP":"00" },
-			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"4F0000","GROUP":"00" }
-          ],
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"OFF","GROUP":"K007"}
+			],
           "ON": [
-			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"4D0000","GROUP":"00" },
-			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"4F0000","GROUP":"00" }
-          ]
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"ON","GROUP":"K007"}
+			]
         }
       },
       "K097": {
         "STATUS": {"stcnt": 2,"stpt": 0,"stmask": [  "OFF",  "ON"] },
         "EVENT": {
           "OFF": [
-			{"CMD":"UV","POS":"G001","Action":"OFF","STU":"410000","GROUP":"10" }
-          ],
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"OFF","GROUP":"K006"}
+			],
           "ON": [
-			{"CMD":"UV","POS":"G001","Action":"ON","STU":"410000","GROUP":"10" }
-          ]
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"ON","GROUP":"K006"}
+			]
         }
       },
       "K098": {
@@ -369,17 +766,107 @@
         },
         "EVENT": {
           "OFF": [
-				{"CMD":"LED","POS":"A001","Action":"OFF","STU":"200000","GROUP":"0A" },
-				{"CMD":"LED","POS":"A001","Action":"OFF","STU":"200000","GROUP":"0B" },
-				{"CMD":"LED","POS":"A001","Action":"OFF","STU":"200000","GROUP":"0C" },
-				{"CMD":"LED","POS":"A001","Action":"OFF","STU":"200000","GROUP":"0D" }
-          ],
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"OFF","GROUP":"K003"}
+				],
           "ON": [
-				{"CMD":"LED","POS":"A001","Action":"ON","STU":"200000","GROUP":"0A" },
-				{"CMD":"LED","POS":"A001","Action":"ON","STU":"200000","GROUP":"0B" },
-				{"CMD":"LED","POS":"A001","Action":"ON","STU":"200000","GROUP":"0C" },
-				{"CMD":"LED","POS":"A001","Action":"ON","STU":"200000","GROUP":"0D" }
-          ]
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"ON","GROUP":"K003"}
+				]
+        }
+      },
+      "K099": {
+        "STATUS": {"stcnt": 2,"stpt": 0,"stmask": [  "OFF",  "ON"]
+        },
+        "EVENT": {
+          "OFF": [
+				{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"660000","GROUP":"00" },
+				{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"6700000","GROUP":"00" }
+			],
+          "ON": [
+				{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"660000","GROUP":"00" },
+				{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"6700000","GROUP":"00" }
+			]
+        }
+      },
+      "K09A": {
+        "STATUS": {"stcnt": 2,"stpt": 0,"stmask": [  "OFF",  "ON"]
+        },
+        "EVENT": {
+          "OFF": [
+				{"CMD":"REGCMD/DEVALARMSET","POS":"E002","Action":"OFF","STU":"000000000000","GROUP":"78"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"E002","Action":"OFF","STU":"000000000000","GROUP":"7A"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"E002","Action":"OFF","STU":"000000000000","GROUP":"7D"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"E002","Action":"OFF","STU":"000000000000","GROUP":"7E"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"E002","Action":"OFF","STU":"000000000000","GROUP":"7F"}
+			],
+          "ON": [
+				{"CMD":"REGCMD/DEVALARMSET","POS":"E002","Action":"ON","STU":"005000600020","GROUP":"78"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"E002","Action":"ON","STU":"005000600020","GROUP":"7A"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"E002","Action":"ON","STU":"005000600020","GROUP":"7D"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"E002","Action":"ON","STU":"005000600020","GROUP":"7E"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"E002","Action":"ON","STU":"005000600020","GROUP":"7F"}
+			]
+        }
+      },
+      "K09B": {
+        "STATUS": {"stcnt": 2,"stpt": 0,"stmask": [  "OFF",  "ON"]
+        },
+        "EVENT": {
+          "OFF": [
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A001","Action":"OFF","STU":"000000000000","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A002","Action":"OFF","STU":"000000000000","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A003","Action":"OFF","STU":"000000000000","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A004","Action":"OFF","STU":"000000000000","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A005","Action":"OFF","STU":"000000000000","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A006","Action":"OFF","STU":"000000000000","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A007","Action":"OFF","STU":"000000000000","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A008","Action":"OFF","STU":"000000000000","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A009","Action":"OFF","STU":"000000000000","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A00A","Action":"OFF","STU":"000000000000","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A00B","Action":"OFF","STU":"000000000000","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A00C","Action":"OFF","STU":"000000000000","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A00D","Action":"OFF","STU":"000000000000","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A021","Action":"OFF","STU":"000000000000","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A022","Action":"OFF","STU":"000000000000","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A023","Action":"OFF","STU":"000000000000","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A024","Action":"OFF","STU":"000000000000","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A025","Action":"OFF","STU":"000000000000","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A026","Action":"OFF","STU":"000000000000","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A027","Action":"OFF","STU":"000000000000","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A028","Action":"OFF","STU":"000000000000","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A029","Action":"OFF","STU":"000000000000","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A02A","Action":"OFF","STU":"000000000000","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A02B","Action":"OFF","STU":"000000000000","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A02C","Action":"OFF","STU":"000000000000","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A02D","Action":"OFF","STU":"000000000000","GROUP":"00"}
+			],
+          "ON": [
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A001","Action":"ON","STU":"02581FFF02C0","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A002","Action":"ON","STU":"02581FFF02C0","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A003","Action":"ON","STU":"02581FFF02C0","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A004","Action":"ON","STU":"02581FFF02C0","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A005","Action":"ON","STU":"02581FFF02C0","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A006","Action":"ON","STU":"02581FFF02C0","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A007","Action":"ON","STU":"02581FFF02C0","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A008","Action":"ON","STU":"02581FFF02C0","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A009","Action":"ON","STU":"02581FFF02C0","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A00A","Action":"ON","STU":"02581FFF02C0","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A00B","Action":"ON","STU":"02581FFF02C0","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A00C","Action":"ON","STU":"02581FFF02C0","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A00D","Action":"ON","STU":"02581FFF02C0","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A021","Action":"ON","STU":"02581FFF02C0","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A022","Action":"ON","STU":"02581FFF02C0","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A023","Action":"ON","STU":"02581FFF02C0","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A024","Action":"ON","STU":"02581FFF02C0","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A025","Action":"ON","STU":"02581FFF02C0","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A026","Action":"ON","STU":"02581FFF02C0","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A027","Action":"ON","STU":"02581FFF02C0","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A028","Action":"ON","STU":"02581FFF02C0","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A029","Action":"ON","STU":"02581FFF02C0","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A02A","Action":"ON","STU":"02581FFF02C0","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A02B","Action":"ON","STU":"02581FFF02C0","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A02C","Action":"ON","STU":"02581FFF02C0","GROUP":"00"},
+				{"CMD":"REGCMD/DEVALARMSET","POS":"A02D","Action":"ON","STU":"02581FFF02C0","GROUP":"00"}
+			]
         }
       }
     },
@@ -390,2334 +877,477 @@
         "ver": "v123",
         "korglist": []
       },
-      "K021": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "0"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K022": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "0"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K023": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "0"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K024": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "0"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
+	  
       "K025": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
+          "stmask": ["OFF","ON"],
           "GROUP": "00"
         },
         "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A001",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A001",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K026": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A002",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A002",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
+          "OFF": [{  "CMD": "LED",  "POS": "A001",  "Action": "OFF",  "STU": "200000",  "GROUP": "00"}],
+          "ON": [{  "CMD": "LED",  "POS": "A001",  "Action": "ON",  "STU": "200000",  "GROUP": "00"}]
         }
       },
       "K027": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
+          "stmask": ["OFF","ON"],
           "GROUP": "00"
         },
         "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A003",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A003",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K028": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A004",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A004",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
+          "OFF": [{  "CMD": "LED",  "POS": "A002",  "Action": "OFF",  "STU": "200000",  "GROUP": "00"}],
+          "ON": [{  "CMD": "LED",  "POS": "A002",  "Action": "ON",  "STU": "200000",  "GROUP": "00"}]
         }
       },
       "K029": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
+          "stmask": ["OFF","ON"],
           "GROUP": "00"
         },
         "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A005",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A005",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K02A": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A006",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A006",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
+          "OFF": [{  "CMD": "LED",  "POS": "A003",  "Action": "OFF",  "STU": "200000",  "GROUP": "00"}],
+          "ON": [{  "CMD": "LED",  "POS": "A003",  "Action": "ON",  "STU": "200000",  "GROUP": "00"}]
         }
       },
       "K02B": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
+          "stmask": ["OFF","ON"],
           "GROUP": "00"
         },
         "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A007",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A007",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K02C": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A008",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A008",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
+          "OFF": [{  "CMD": "LED",  "POS": "A004",  "Action": "OFF",  "STU": "200000",  "GROUP": "00"}],
+          "ON": [{  "CMD": "LED",  "POS": "A004",  "Action": "ON",  "STU": "200000",  "GROUP": "00"}]
         }
       },
       "K02D": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
+          "stmask": ["OFF","ON"],
           "GROUP": "00"
         },
         "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A009",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A009",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K02E": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A00A",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A00A",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
+          "OFF": [{  "CMD": "LED",  "POS": "A005",  "Action": "OFF",  "STU": "200000",  "GROUP": "00"}],
+          "ON": [{  "CMD": "LED",  "POS": "A005",  "Action": "ON",  "STU": "200000",  "GROUP": "00"}]
         }
       },
       "K02F": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
+          "stmask": ["OFF","ON"],
           "GROUP": "00"
         },
         "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A00B",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A00B",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K030": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A00C",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A00C",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
+          "OFF": [{  "CMD": "LED",  "POS": "A006",  "Action": "OFF",  "STU": "200000",  "GROUP": "00"}],
+          "ON": [{  "CMD": "LED",  "POS": "A006",  "Action": "ON",  "STU": "200000",  "GROUP": "00"}]
         }
       },
       "K031": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
+          "stmask": ["OFF","ON"],
           "GROUP": "00"
         },
         "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A00D",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A00D",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K032": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A00E",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A00E",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
+          "OFF": [{  "CMD": "LED",  "POS": "A007",  "Action": "OFF",  "STU": "200000",  "GROUP": "00"}],
+          "ON": [{  "CMD": "LED",  "POS": "A007",  "Action": "ON",  "STU": "200000",  "GROUP": "00"}]
         }
       },
       "K033": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
+          "stmask": ["OFF","ON"],
           "GROUP": "00"
         },
         "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A00F",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A00F",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K034": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A010",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A010",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
+          "OFF": [{  "CMD": "LED",  "POS": "A008",  "Action": "OFF",  "STU": "200000",  "GROUP": "00"}],
+          "ON": [{  "CMD": "LED",  "POS": "A008",  "Action": "ON",  "STU": "200000",  "GROUP": "00"}]
         }
       },
       "K035": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
+          "stmask": ["OFF","ON"],
           "GROUP": "00"
         },
         "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A011",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A011",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K036": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A012",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A012",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
+          "OFF": [{  "CMD": "LED",  "POS": "A009",  "Action": "OFF",  "STU": "200000",  "GROUP": "00"}],
+          "ON": [{  "CMD": "LED",  "POS": "A009",  "Action": "ON",  "STU": "200000",  "GROUP": "00"}]
         }
       },
       "K037": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
+          "stmask": ["OFF","ON"],
           "GROUP": "00"
         },
         "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A013",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A013",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K038": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A014",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A014",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
+          "OFF": [{  "CMD": "LED",  "POS": "A00A",  "Action": "OFF",  "STU": "200000",  "GROUP": "00"}],
+          "ON": [{  "CMD": "LED",  "POS": "A00A",  "Action": "ON",  "STU": "200000",  "GROUP": "00"}]
         }
       },
       "K039": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
+          "stmask": ["OFF","ON"],
           "GROUP": "00"
         },
         "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A015",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A015",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K03A": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A016",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A016",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
+          "OFF": [{  "CMD": "LED",  "POS": "A00B",  "Action": "OFF",  "STU": "200000",  "GROUP": "00"}],
+          "ON": [{  "CMD": "LED",  "POS": "A00B",  "Action": "ON",  "STU": "200000",  "GROUP": "00"}]
         }
       },
       "K03B": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
+          "stmask": ["OFF","ON"],
           "GROUP": "00"
         },
         "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A017",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A017",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K03C": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A018",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A018",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
+          "OFF": [{  "CMD": "LED",  "POS": "A00C",  "Action": "OFF",  "STU": "200000",  "GROUP": "00"}],
+          "ON": [{  "CMD": "LED",  "POS": "A00C",  "Action": "ON",  "STU": "200000",  "GROUP": "00"}]
         }
       },
       "K03D": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
+          "stmask": ["OFF","ON"],
           "GROUP": "00"
         },
         "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A019",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A019",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
+          "OFF": [{  "CMD": "LED",  "POS": "A00D",  "Action": "OFF",  "STU": "200000",  "GROUP": "00"}],
+          "ON": [{  "CMD": "LED",  "POS": "A00D",  "Action": "ON",  "STU": "200000",  "GROUP": "00"}]
         }
       },
-      "K03E": {
+	  
+      "K067": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
+          "stmask": ["OFF","ON"],
           "GROUP": "00"
         },
         "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A01A",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A01A",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K03F": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A01B",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A01B",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K040": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A01C",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A01C",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K041": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A01D",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A01D",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K04B": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A01E",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A01E",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K04C": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A01F",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A01F",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K04D": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A020",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A020",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K04E": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A021",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A021",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K04F": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A022",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A022",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K050": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A023",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A023",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K051": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A024",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A024",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K052": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A025",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A025",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K053": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A026",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A026",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K054": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A027",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A027",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K055": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A028",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A028",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K056": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A029",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A029",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K057": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A02A",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A02A",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K058": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A02B",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A02B",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K059": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A02C",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A02C",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K05A": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A02D",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A02D",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K05B": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A02E",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A02E",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K05C": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A02F",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A02F",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K05D": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A030",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A030",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K05E": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A031",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A031",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K05F": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A032",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A032",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K060": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A033",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A033",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K061": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A034",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A034",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K062": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A035",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A035",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K063": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A036",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A036",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
-        }
-      },
-      "K064": {
-        "STATUS": {
-          "stcnt": 2,
-          "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "00"
-        },
-        "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A037",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A037",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
+          "OFF": [{  "CMD": "LED",  "POS": "A021",  "Action": "OFF",  "STU": "200000",  "GROUP": "00"}],
+          "ON": [{  "CMD": "LED",  "POS": "A021",  "Action": "ON",  "STU": "200000",  "GROUP": "00"}]
         }
       },
       "K065": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
+          "stmask": ["OFF","ON"],
           "GROUP": "00"
         },
         "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A038",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A038",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
+          "OFF": [{  "CMD": "LED",  "POS": "A022",  "Action": "OFF",  "STU": "200000",  "GROUP": "00"}],
+          "ON": [{  "CMD": "LED",  "POS": "A022",  "Action": "ON",  "STU": "200000",  "GROUP": "00"}]
         }
       },
-      "K066": {
+      "K063": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
+          "stmask": ["OFF","ON"],
           "GROUP": "00"
         },
         "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A039",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A039",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
+          "OFF": [{  "CMD": "LED",  "POS": "A023",  "Action": "OFF",  "STU": "200000",  "GROUP": "00"}],
+          "ON": [{  "CMD": "LED",  "POS": "A023",  "Action": "ON",  "STU": "200000",  "GROUP": "00"}]
         }
       },
-      "K067": {
+      "K061": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
+          "stmask": ["OFF","ON"],
           "GROUP": "00"
         },
         "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
+          "OFF": [{  "CMD": "LED",  "POS": "A024",  "Action": "OFF",  "STU": "200000",  "GROUP": "00"}],
+          "ON": [{  "CMD": "LED",  "POS": "A024",  "Action": "ON",  "STU": "200000",  "GROUP": "00"}]
         }
       },
-      "K048": {
+      "K05F": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "0"
+          "stmask": ["OFF","ON"],
+          "GROUP": "00"
         },
         "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
+          "OFF": [{  "CMD": "LED",  "POS": "A025",  "Action": "OFF",  "STU": "200000",  "GROUP": "00"}],
+          "ON": [{  "CMD": "LED",  "POS": "A025",  "Action": "ON",  "STU": "200000",  "GROUP": "00"}]
         }
       },
-      "K049": {
+      "K05D": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "0"
+          "stmask": ["OFF","ON"],
+          "GROUP": "00"
         },
         "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
+          "OFF": [{  "CMD": "LED",  "POS": "A026",  "Action": "OFF",  "STU": "200000",  "GROUP": "00"}],
+          "ON": [{  "CMD": "LED",  "POS": "A026",  "Action": "ON",  "STU": "200000",  "GROUP": "00"}]
         }
       },
-      "K04A": {
+      "K05B": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "0"
+          "stmask": ["OFF","ON"],
+          "GROUP": "00"
         },
         "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
+          "OFF": [{  "CMD": "LED",  "POS": "A027",  "Action": "OFF",  "STU": "200000",  "GROUP": "00"}],
+          "ON": [{  "CMD": "LED",  "POS": "A027",  "Action": "ON",  "STU": "200000",  "GROUP": "00"}]
         }
       },
-      "K044": {
+      "K059": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "0"
+          "stmask": ["OFF","ON"],
+          "GROUP": "00"
         },
         "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
+          "OFF": [{  "CMD": "LED",  "POS": "A028",  "Action": "OFF",  "STU": "200000",  "GROUP": "00"}],
+          "ON": [{  "CMD": "LED",  "POS": "A028",  "Action": "ON",  "STU": "200000",  "GROUP": "00"}]
         }
       },
-      "K045": {
+      "K057": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "0"
+          "stmask": ["OFF","ON"],
+          "GROUP": "00"
         },
         "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
+          "OFF": [{  "CMD": "LED",  "POS": "A029",  "Action": "OFF",  "STU": "200000",  "GROUP": "00"}],
+          "ON": [{  "CMD": "LED",  "POS": "A029",  "Action": "ON",  "STU": "200000",  "GROUP": "00"}]
         }
       },
-      "K046": {
+      "K055": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "0"
+          "stmask": ["OFF","ON"],
+          "GROUP": "00"
         },
         "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
+          "OFF": [{  "CMD": "LED",  "POS": "A02A",  "Action": "OFF",  "STU": "200000",  "GROUP": "00"}],
+          "ON": [{  "CMD": "LED",  "POS": "A02A",  "Action": "ON",  "STU": "200000",  "GROUP": "00"}]
         }
       },
-      "K047": {
+      "K053": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
-          "GROUP": "0"
+          "stmask": ["OFF","ON"],
+          "GROUP": "00"
         },
         "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
+          "OFF": [{  "CMD": "LED",  "POS": "A02B",  "Action": "OFF",  "STU": "200000",  "GROUP": "00"}],
+          "ON": [{  "CMD": "LED",  "POS": "A02B",  "Action": "ON",  "STU": "200000",  "GROUP": "00"}]
         }
       },
+      "K051": {
+        "STATUS": {
+          "stcnt": 2,
+          "stpt": 0,
+          "stmask": ["OFF","ON"],
+          "GROUP": "00"
+        },
+        "EVENT": {
+          "OFF": [{  "CMD": "LED",  "POS": "A02C",  "Action": "OFF",  "STU": "200000",  "GROUP": "00"}],
+          "ON": [{  "CMD": "LED",  "POS": "A02C",  "Action": "ON",  "STU": "200000",  "GROUP": "00"}]
+        }
+      },
+      "K04F": {
+        "STATUS": {
+          "stcnt": 2,
+          "stpt": 0,
+          "stmask": ["OFF","ON"],
+          "GROUP": "00"
+        },
+        "EVENT": {
+          "OFF": [{  "CMD": "LED",  "POS": "A02D",  "Action": "OFF",  "STU": "200000",  "GROUP": "00"}],
+          "ON": [{  "CMD": "LED",  "POS": "A02D",  "Action": "ON",  "STU": "200000",  "GROUP": "00"}]
+        }
+      },
+	  
       "K042": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
+          "stmask": ["OFF","ON"],
           "GROUP": "0"
         },
         "EVENT": {
+          "ON":  [
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"670000","GROUP":"00" }
+			],
           "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
-          "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
+			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"670000","GROUP":"00" }
+			]
         }
       },
       "K043": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
+          "stmask": ["OFF","ON"],
           "GROUP": "0"
         },
         "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
+          "AUTO": [
+			{"CMD":"REGCMD/AUTOSETUP","POS":"UV","Action":"AUTO","STU":"01","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"660000","GROUP":"00" }],
           "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
+			{"CMD":"REGCMD/AUTOSETUP","POS":"UV","Action":"AUTO","STU":"00","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"660000","GROUP":"00" }],
+          "OFF": [
+			{"CMD":"REGCMD/AUTOSETUP","POS":"UV","Action":"AUTO","STU":"00","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"6600000","GROUP":"00" }]
         }
-      },
-      "K068": {
+      },	  
+	  
+      "K044": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
+          "stmask": ["OFF","ON"],
           "GROUP": "0"
         },
         "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
+          "AUTO": [
+			{"CMD":"REGCMD/AUTOSETUP","POS":"CYCLEFAN","Action":"AUTO","STU":"01","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"5B0000","GROUP":"00" }],
           "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"ON","GROUP":"K004"}
+			],
+          "OFF": [
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"OFF","GROUP":"K004"}
+			]
         }
       },
-      "K069": {
+      "K045": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
+          "stmask": ["OFF","ON"],
           "GROUP": "0"
         },
         "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
           "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
+			{"CMD":"REGCMD/AUTOSETUP","POS":"REFRESH","Action":"AUTO","STU":"00","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"580000","GROUP":"00" }],
+          "OFF": [
+			{"CMD":"REGCMD/AUTOSETUP","POS":"REFRESH","Action":"AUTO","STU":"00","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"580000","GROUP":"00" }]
         }
       },
-      "K06A": {
+      "K046": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
+          "stmask": ["OFF","ON"],
           "GROUP": "0"
         },
         "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
           "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
+			{"CMD":"REGCMD/AUTOSETUP","POS":"CYCLEFAN","Action":"AUTO","STU":"00","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"5B0000","GROUP":"00" }],
+          "OFF": [
+			{"CMD":"REGCMD/AUTOSETUP","POS":"CYCLEFAN","Action":"AUTO","STU":"00","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"5B0000","GROUP":"00" }]
         }
       },
-      "K06B": {
+      "K047": {
         "STATUS": {
           "stcnt": 2,
           "stpt": 0,
-          "stmask": [
-            "OFF",
-            "ON"
-          ],
+          "stmask": ["OFF","ON"],
           "GROUP": "0"
         },
         "EVENT": {
-          "OFF": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "OFF",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ],
           "ON": [
-            {
-              "CMD": "LED",
-              "POS": "A03A",
-              "Action": "ON",
-              "STU": "200000",
-              "GROUP": "00"
-            }
-          ]
+			{"CMD":"REGCMD/AUTOSETUP","POS":"CYCLEFAN","Action":"AUTO","STU":"00","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"ON","STU":"5B0000","GROUP":"00" }],
+          "OFF": [
+			{"CMD":"REGCMD/AUTOSETUP","POS":"CYCLEFAN","Action":"AUTO","STU":"00","GROUP":"00" },
+			{"CMD":"PUMP","POS":"E002","Action":"OFF","STU":"5B0000","GROUP":"00" }]
+        }
+      },
+	  
+      "K048": {
+        "STATUS": {
+          "stcnt": 2,
+          "stpt": 0,
+          "stmask": ["OFF","ON"],
+          "GROUP": "0"
+        },
+        "EVENT": {
+          "ON": [
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"AUTO","GROUP":"K017"}
+			],
+          "OFF": [
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"OFF","GROUP":"K017"}
+			]
+        }
+      },
+      "K049": {
+        "STATUS": {
+          "stcnt": 2,
+          "stpt": 0,
+          "stmask": ["OFF","ON"],
+          "GROUP": "0"
+        },
+        "EVENT": {
+          "ON": [
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"ON","GROUP":"K017"}
+			],
+          "OFF": [
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"OFF","GROUP":"K017"}
+			]
+        }
+      },
+      "K04A": {
+        "STATUS": {
+          "stcnt": 2,
+          "stpt": 0,
+          "stmask": ["OFF","ON"],
+          "GROUP": "0"
+        },
+        "EVENT": {
+          "ON": [
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"ON","GROUP":"K017"}
+			],
+          "OFF": [
+			{"CMD":"REGCMD/KEYSETUP","POS":"KEYPAD0","Action":"AUTO","STU":"OFF","GROUP":"K017"}
+			]
         }
       }
+	  
     }
-	
   },
+  
   "DEVLIB": {
     "DEVMODE": {
       "DLLIST": {

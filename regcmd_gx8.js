@@ -74,11 +74,19 @@ function keylistapicall(kapilist){
 	
 			//ext = http://tscloud.opcom.com/Cloud/API/v2/KeypadUpdate?ID=OFA1C0044826BEF87AEA0481&KeypadID=KEYPAD0&Index=K004&value=ON			
 			if(chkcmd == "REGCMD/KEYSETUP"){
+				
 				updatekeysstuatusurl= pdbuffer.pdjobj.PDDATA.v2keypadstatusupdateurl+"?ID="+pdbuffer.setuuid+"&KeypadID="+kapilist[kk].POS+"&Index="+kapilist[kk].GROUP+"&value="+kapilist[kk].STU;
 				console.log("sudo active update to webui =>"+updatekeysstuatusurl);
 				client.get(updatekeysstuatusurl,cargs, function (data, response) {
 					console.log("keypad active update to webui   ok ...");
 				}).on("error", function(err) {console.log("err for client");}).on('requestTimeout', function (req) {req.abort();});
+				
+				updatekeysstuatusurl220 = "http://192.168.5.220/API/v2/KeypadUpdate.php"+"?ID="+pdbuffer.setuuid+"&KeypadID="+kapilist[kk].POS+"&Index="+kapilist[kk].GROUP+"&value="+kapilist[kk].STU;
+				console.log("sudo active update to webui =>"+updatekeysstuatusurl220);
+				client.get(updatekeysstuatusurl220,cargs, function (data, response) {
+					console.log("keypad active update to webui   ok ...");
+				}).on("error", function(err) {console.log("err for client");}).on('requestTimeout', function (req) {req.abort();});
+				
 			};
 		}
 	}
@@ -124,7 +132,6 @@ function keypadjload(keyscan){
 }
 
 function regcmdchkloop(){
-
 		//### fa auto check keypad push event ###
 		setInterval(function(){			
 			//console.log("0xfc command check 0..."+global.arxokflag)
@@ -133,10 +140,9 @@ function regcmdchkloop(){
 				console.log("psuh keypad = "+kpadrun);
 				keypadjload(kpadrun);
 			}
-		},177);
+		},500);
 
 }
-
 
 
 //localhost:3000/api/telephone
@@ -151,849 +157,15 @@ router.get('/check',function(req,res,next){
 	console.log(req.query.pin);
 	res.send('Hello regcmd check !')
 });
-
-//==== WEB REGCMF API COMMAND === 
-router.get('/DEVTRIG',function(req,res,next){	
-	console.log(req.query);	
-	let cmd = req.query.Action
-	let uuid = req.query.UUID
-	let pos = req.query.POS
-	let group = Number(req.query.GROUP)
-	let cstu = req.query.STU
-	
-	//console.log("API cmd ="+cmd+" uuid="+uuid+" pos="+pos+" group="+group);
-	apipamcheck(res,cmd,uuid,pos,group,cstu,()=>{
-		let cmdindex=0
-		if(cmd in pdbuffer.pdjobj.subcmd)cmdindex = pdbuffer.pdjobj.subcmd[cmd]
-		//let regadd = Number("0x"+cstu.substr(0,2))
-		let cregadd = cstu.substr(0,2)
-		let	nstu = Number('0x'+cstu.substr(2))
-		let ttbuf = ""	
-		ttbuf = Buffer.from(cmdcode.rs485v050.s04cmd,'hex');//"f5200d00020401230123456789abcdef04"
-		if(pos in pdbuffer.pdjobj.PDDATA.Devtab){ //check pos is working
-		   ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;
-		}else{			
-		   return;
-		}
-		if(cregadd in pdbuffer.pdjobj.PDDATA.Devtab[pos]["C70"]["chtab"]){ //check subcmd is working
-		    pdbuffer.pdjobj.PDDATA.Devtab[pos]["C70"]["chtab"][cregadd].sub=cmdindex;			
-		    pdbuffer.pdjobj.PDDATA.Devtab[pos]["C70"]["chtab"][cregadd].stu=0;
-		}else{
-		   //ttbuf[6]=0x55
-		   console.log(cregadd+" not maping => "+pos);
-		   return;
-		}	
-		
-		switch(cmd){
-			case "OFF":
-				return
-				break
-			case "ON":	
-				console.log(cregadd+" not x11 "+pos);	
-				ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;//ipadd 0x20
-				ttbuf[4]= pdbuffer.pdjobj.subcmd[cmd];	//subcmd code				
-				ttbuf[5]= Number("0x"+cregadd);	//### regadd data to ttbuf array	
-				break
-			case "LOAD":
-				console.log(cregadd+" not x12 "+pos);	
-				ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;//ipadd 0x20
-				ttbuf[4]= pdbuffer.pdjobj.subcmd[cmd];	//subcmd code				
-				ttbuf[5]= Number("0x"+cregadd);	//### regadd data to ttbuf array				
-				break
-			case "AUTO":
-				return
-				break
-			case "SET":
-				console.log(cregadd+" not x14 "+pos);	
-				ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;//ipadd 0x20
-				ttbuf[4]= pdbuffer.pdjobj.subcmd[cmd];	//subcmd code				
-				ttbuf[5]= Number("0x"+cregadd);	//### regadd data to ttbuf array
-				break
-			case "LOW":
-				console.log(cregadd+" not x15 "+pos);	
-				ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;//ipadd 0x20
-				ttbuf[4]= pdbuffer.pdjobj.subcmd[cmd];	//subcmd code				
-				ttbuf[5]= Number("0x"+cregadd);	//### regadd data to ttbuf array	
-				break
-			case "HI":
-				console.log(cregadd+" not x16 "+pos);	
-				ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;//ipadd 0x20
-				ttbuf[4]= pdbuffer.pdjobj.subcmd[cmd];	//subcmd code				
-				ttbuf[5]= Number("0x"+cregadd);	//### regadd data to ttbuf array	
-			case "ALARM":
-				return
-				break
-			case "MODELOOP":
-				return
-				break
-			case "MODETRIG":
-				return
-				break
-			default:
-				console.log(cregadd+" not define =>"+cmd);	
-				return
-		}
-		
-		console.log("send:"+ttbuf.toString('hex'));
-		pdbuffer.totxbuff(ttbuf);	
-				
-	});	
-});
-
-router.get('/DEVTRIGCOUNT',function(req,res,next){	
-	console.log(req.query);	
-	let cmd = req.query.Action
-	let uuid = req.query.UUID
-	let pos = req.query.POS
-	let group = Number(req.query.GROUP)
-	let cstu = req.query.STU
-	
-	//console.log("API cmd ="+cmd+" uuid="+uuid+" pos="+pos+" group="+group);
-	apipamcheck(res,cmd,uuid,pos,group,cstu,()=>{
-		let cmdindex=0
-		if(cmd in pdbuffer.pdjobj.subcmd)cmdindex = pdbuffer.pdjobj.subcmd[cmd]
-		//let regadd = Number("0x"+cstu.substr(0,2))
-		let cregadd = cstu.substr(0,2)
-		let	nstu = Number('0x'+cstu.substr(2))
-		let ttbuf = ""	
-		ttbuf = Buffer.from(cmdcode.rs485v050.s05cmd,'hex');//"f5200300020505"
-		if(pos in pdbuffer.pdjobj.PDDATA.Devtab){ //check pos is working
-		   ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;
-		}else{			
-		   return;
-		}
-		if(cregadd in pdbuffer.pdjobj.PDDATA.Devtab[pos]["C70"]["chtab"]){ //check subcmd is working
-		    pdbuffer.pdjobj.PDDATA.Devtab[pos]["C70"]["chtab"][cregadd].sub=cmdindex;			
-		    pdbuffer.pdjobj.PDDATA.Devtab[pos]["C70"]["chtab"][cregadd].stu=0;
-		}else{
-		   //ttbuf[6]=0x55
-		   console.log(cregadd+" not maping => "+pos);
-		   return;
-		}	
-		
-		switch(cmd){
-			case "OFF":
-				return
-				break
-			case "ON":	
-				return
-				break
-			case "LOAD":
-				console.log(cregadd+" not x12 "+pos);	
-				ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;//ipadd 0x20
-				ttbuf[4]= pdbuffer.pdjobj.subcmd[cmd];	//subcmd code				
-				ttbuf[5]= Number("0x"+cregadd);	//### regadd data to ttbuf array				
-				break
-			case "AUTO":
-				return
-				break
-			case "LOW":
-				return
-				break
-			case "HI":		
-				break
-			case "ALARM":
-				return
-				break
-			case "MODELOOP":
-				return
-				break
-			case "MODETRIG":
-				return
-				break
-			default:
-				console.log(cregadd+" not define =>"+cmd);	
-				return
-		}
-		
-		console.log("send:"+ttbuf.toString('hex'));
-		pdbuffer.totxbuff(ttbuf);	
-				
-	});	
-});
-
-router.get('/DEVEVENT',function(req,res,next){	
-	console.log(req.query);	
-	let cmd = req.query.Action
-	let uuid = req.query.UUID
-	let pos = req.query.POS
-	let group = Number(req.query.GROUP)
-	let cstu = req.query.STU
-	
-	//console.log("API cmd ="+cmd+" uuid="+uuid+" pos="+pos+" group="+group);
-	apipamcheck(res,cmd,uuid,pos,group,cstu,()=>{
-		let cmdindex=0
-		if(cmd in pdbuffer.pdjobj.subcmd)cmdindex = pdbuffer.pdjobj.subcmd[cmd]
-		//let regadd = Number("0x"+cstu.substr(0,2))
-		let cregadd = cstu.substr(0,2)
-		let	nstu = Number('0x'+cstu.substr(2))
-		let ttbuf = ""	
-		ttbuf = Buffer.from(cmdcode.rs485v050.s06cmd,'hex');//"f5200d00020601230123456789abcdef06"
-		if(pos in pdbuffer.pdjobj.PDDATA.Devtab){ //check pos is working
-		   ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;
-		}else{			
-		   return;
-		}
-		if(cregadd in pdbuffer.pdjobj.PDDATA.Devtab[pos]["C70"]["chtab"]){ //check subcmd is working
-		    pdbuffer.pdjobj.PDDATA.Devtab[pos]["C70"]["chtab"][cregadd].sub=cmdindex;			
-		    pdbuffer.pdjobj.PDDATA.Devtab[pos]["C70"]["chtab"][cregadd].stu=0;
-		}else{
-		   //ttbuf[6]=0x55
-		   console.log(cregadd+" not maping => "+pos);
-		   return;
-		}	
-		
-		switch(cmd){
-			case "OFF":
-				return
-				break
-			case "ON":	
-				console.log(cregadd+" not x11 "+pos);	
-				ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;//ipadd 0x20
-				ttbuf[4]= pdbuffer.pdjobj.subcmd[cmd];	//subcmd code				
-				ttbuf[5]= Number("0x"+cregadd);	//### regadd data to ttbuf array	
-				break
-			case "LOAD":
-				console.log(cregadd+" not x12 "+pos);	
-				ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;//ipadd 0x20
-				ttbuf[4]= pdbuffer.pdjobj.subcmd[cmd];	//subcmd code				
-				ttbuf[5]= Number("0x"+cregadd);	//### regadd data to ttbuf array				
-				break
-			case "AUTO":
-				return
-				break
-			case "SET":
-				console.log(cregadd+" not x14 "+pos);	
-				ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;//ipadd 0x20
-				ttbuf[4]= pdbuffer.pdjobj.subcmd[cmd];	//subcmd code				
-				ttbuf[5]= Number("0x"+cregadd);	//### regadd data to ttbuf array
-				break
-			case "LOW":
-				console.log(cregadd+" not x15 "+pos);	
-				ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;//ipadd 0x20
-				ttbuf[4]= pdbuffer.pdjobj.subcmd[cmd];	//subcmd code				
-				ttbuf[5]= Number("0x"+cregadd);	//### regadd data to ttbuf array	
-				break
-			case "HI":
-				console.log(cregadd+" not x16 "+pos);	
-				ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;//ipadd 0x20
-				ttbuf[4]= pdbuffer.pdjobj.subcmd[cmd];	//subcmd code				
-				ttbuf[5]= Number("0x"+cregadd);	//### regadd data to ttbuf array	
-			case "ALARM":
-				return
-				break
-			case "MODELOOP":
-				return
-				break
-			case "MODETRIG":
-				return
-				break
-			default:
-				console.log(cregadd+" not define =>"+cmd);	
-				return
-		}
-		
-		console.log("send:"+ttbuf.toString('hex'));
-		pdbuffer.totxbuff(ttbuf);	
-				
-	});	
-});
-
-router.get('/DEVEVENTCOUNT',function(req,res,next){	
-	console.log(req.query);	
-	let cmd = req.query.Action
-	let uuid = req.query.UUID
-	let pos = req.query.POS
-	let group = Number(req.query.GROUP)
-	let cstu = req.query.STU
-	
-	//console.log("API cmd ="+cmd+" uuid="+uuid+" pos="+pos+" group="+group);
-	apipamcheck(res,cmd,uuid,pos,group,cstu,()=>{
-		let cmdindex=0
-		if(cmd in pdbuffer.pdjobj.subcmd)cmdindex = pdbuffer.pdjobj.subcmd[cmd]
-		//let regadd = Number("0x"+cstu.substr(0,2))
-		let cregadd = cstu.substr(0,2)
-		let	nstu = Number('0x'+cstu.substr(2))
-		let ttbuf = ""	
-		ttbuf = Buffer.from(cmdcode.rs485v050.s07cmd,'hex');//"f5200300020707"
-		if(pos in pdbuffer.pdjobj.PDDATA.Devtab){ //check pos is working
-		   ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;
-		}else{			
-		   return;
-		}
-		if(cregadd in pdbuffer.pdjobj.PDDATA.Devtab[pos]["C70"]["chtab"]){ //check subcmd is working
-		    pdbuffer.pdjobj.PDDATA.Devtab[pos]["C70"]["chtab"][cregadd].sub=cmdindex;			
-		    pdbuffer.pdjobj.PDDATA.Devtab[pos]["C70"]["chtab"][cregadd].stu=0;
-		}else{
-		   //ttbuf[6]=0x55
-		   console.log(cregadd+" not maping => "+pos);
-		   return;
-		}	
-		
-		switch(cmd){
-			case "OFF":
-				return
-				break
-			case "ON":	
-				return
-				break
-			case "LOAD":
-				console.log(cregadd+" not x15 "+pos);	
-				ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;//ipadd 0x20
-				ttbuf[4]= pdbuffer.pdjobj.subcmd[cmd];	//subcmd code				
-				ttbuf[5]= Number("0x"+cregadd);	//### regadd data to ttbuf array				
-				break
-			case "AUTO":
-				return
-				break
-			case "LOW":
-				return
-				break
-			case "HI":		
-				break
-			case "ALARM":
-				return
-				break
-			case "MODELOOP":
-				return
-				break
-			case "MODETRIG":
-				return
-				break
-			default:
-				console.log(cregadd+" not define =>"+cmd);	
-				return
-		}
-		
-		console.log("send:"+ttbuf.toString('hex'));
-		pdbuffer.totxbuff(ttbuf);	
-				
-	});	
-});
-
-
-//=== KEYPAD EVENT LIST === 
-router.get('/KEYVER',function(req,res,next){//ok	
-	console.log(req.query);	
-	let cmd = req.query.Action
-	let uuid = req.query.UUID
-	let pos = req.query.POS
-	let group = Number(req.query.GROUP)
-	let cstu = req.query.STU
-	
-	//console.log("API cmd ="+cmd+" uuid="+uuid+" pos="+pos+" group="+group);
-	apipamcheck(res,cmd,uuid,pos,group,cstu,()=>{
-		let cmdindex=0
-		if(cmd in pdbuffer.pdjobj.subcmd)cmdindex = pdbuffer.pdjobj.subcmd[cmd]
-		//let regadd = Number("0x"+cstu.substr(0,2))
-		let cregadd = cstu.substr(0,2)
-		let	nstu = Number('0x'+cstu.substr(0,2))
-		let ttbuf = ""	
-		ttbuf = Buffer.from(cmdcode.rs485v050.s0fcmd,'hex');//"f5200500020f00000f"
-		if(pos in pdbuffer.pdjobj.PDDATA.Devtab){ //check pos is working
-		   ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;
-		}else{			
-		   return;
-		}
-		if(cregadd in pdbuffer.pdjobj.PDDATA.Devtab[pos]["C70"]["chtab"]){ //check subcmd is working
-		    pdbuffer.pdjobj.PDDATA.Devtab[pos]["C70"]["chtab"][cregadd].sub=cmdindex;			
-		    pdbuffer.pdjobj.PDDATA.Devtab[pos]["C70"]["chtab"][cregadd].stu=0;
-		}else{
-		   //ttbuf[6]=0x55
-		   console.log(cregadd+" not maping => "+pos);
-		   return;
-		}	
-		
-		switch(cmd){
-			case "OFF":
-				return
-				break
-			case "ON":	
-				return
-				break
-			case "LOAD":
-				console.log(cregadd+" not x15 "+pos);	//f5 20 06 00 02 0f 00 00 0f
-				ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;//ipadd 0x20
-				ttbuf[4]= pdbuffer.pdjobj.subcmd[cmd];	//subcmd code				
-				ttbuf[5]= Number("0x"+cregadd);	//### regadd data to ttbuf array
-				ttbuf[6]= Number('0x'+cstu.substr(2,2)); //### ver  byte1 to ttbuf array
-				ttbuf[7]= Number('0x'+cstu.substr(4,2)); //### ver  byte1 to ttbuf array				
-				break
-			case "AUTO":
-				return
-				break
-			case "SET":                                              // 0123456789012345678901234567890123
-				ttbuf = Buffer.from(cmdcode.rs485v050.s0fscmd,'hex');//"f5200E00040f000000000000000000000f"
-				console.log(cregadd+" not x14 "+pos);	
-				ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;//ipadd 0x20
-				ttbuf[4]= pdbuffer.pdjobj.subcmd[cmd];	//subcmd code				
-				ttbuf[5]= Number("0x"+cregadd);	//### regadd data to ttbuf array	
-				ttbuf[6]= Number('0x'+cstu.substr(2,2)); //### ver  byte1 to ttbuf array
-				ttbuf[7]= Number('0x'+cstu.substr(4,2)); //### ver  byte1 to ttbuf array
-				ttbuf[8]= Number('0x'+cstu.substr(6,2)); //### ver  byte1 to ttbuf array
-				ttbuf[9]= Number('0x'+cstu.substr(8,2)); //### ver  byte1 to ttbuf array
-				ttbuf[10]= Number('0x'+cstu.substr(10,2)); //### ver  byte1 to ttbuf array
-				ttbuf[11]= Number('0x'+cstu.substr(12,2)); //### ver  byte1 to ttbuf array
-				//ttbuf[12]= Number('0x'+cstu.substr(14,2)); //### ver  byte1 to ttbuf array
-				//ttbuf[13]= Number('0x'+cstu.substr(16,2)); //### ver  byte1 to ttbuf array
-				
-				break
-			case "LOW":
-				return
-				break
-			case "HI":		
-				break
-			case "ALARM":
-				return
-				break
-			case "MODELOOP":
-				return
-				break
-			case "MODETRIG":
-				return
-				break
-			default:
-				console.log(cregadd+" not define =>"+cmd);	
-				return
-		}
-		
-		console.log("send:"+ttbuf.toString('hex'));
-		pdbuffer.totxbuff(ttbuf);	
-				
-	});	
-});
-
-router.get('/KEYEVLIST',function(req,res,next){//ok
-	console.log(req.query);	
-	let cmd = req.query.Action
-	let uuid = req.query.UUID
-	let pos = req.query.POS
-	let group = Number(req.query.GROUP)
-	let cstu = req.query.STU
-	
-	//console.log("API cmd ="+cmd+" uuid="+uuid+" pos="+pos+" group="+group);
-	apipamcheck(res,cmd,uuid,pos,group,cstu,()=>{
-		let cmdindex=0
-		if(cmd in pdbuffer.pdjobj.subcmd)cmdindex = pdbuffer.pdjobj.subcmd[cmd]
-		//let regadd = Number("0x"+cstu.substr(0,2))
-		let cregadd = cstu.substr(0,2)
-		//let	nstu = Number('0x'+cstu.substr(2))
-		let ttbuf = ""	
-		ttbuf = Buffer.from(cmdcode.rs485v050.s10cmd,'hex');//"f5200d00021001230123456789abcdef10"
-		if(pos in pdbuffer.pdjobj.PDDATA.Devtab){ //check pos is working
-		   ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;
-		}else{			
-		   return;
-		}
-		if(cregadd in pdbuffer.pdjobj.PDDATA.Devtab[pos]["C70"]["chtab"]){ //check subcmd is working
-		    pdbuffer.pdjobj.PDDATA.Devtab[pos]["C70"]["chtab"][cregadd].sub=cmdindex;			
-		    pdbuffer.pdjobj.PDDATA.Devtab[pos]["C70"]["chtab"][cregadd].stu=0;
-		}else{
-		   //ttbuf[6]=0x55
-		   console.log(cregadd+" not maping => "+pos);
-		   return;
-		}
-		//0123456789012345678901234567890123
-		//f5200e00021001230123456789abcdef10
-		// 0 1 2 3 4 5 6 7 8 910111213141516 [6:7] [8:15]
-		switch(cmd){
-			case "OFF":
-				ttbuf = Buffer.from(cmdcode.rs485v050.s11cmd,'hex');//"f5200d00021001230123456789abcdef10"
-				console.log(cregadd+" not x12 "+pos+cmd);	
-				ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;//ipadd 0x20
-				ttbuf[4]= pdbuffer.pdjobj.subcmd[cmd];	//subcmd code				
-				ttbuf[5]= Number("0x"+cregadd);	//### regadd data to ttbuf array
-				
-				ttbuf[6]= Number('0x'+cstu.substr(2,2));//### indexH
-				ttbuf[7]= Number('0x'+cstu.substr(4,2));//### indexL (0:off/1:on)
-				break
-			case "ON"://buffer save  to eeprom 
-				console.log(cregadd+" not x11 "+pos+cmd);	
-				ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;//ipadd 0x20
-				ttbuf[4]= pdbuffer.pdjobj.subcmd[cmd];	//subcmd code				
-				ttbuf[5]= Number("0x"+cregadd);	//### regadd data to ttbuf array
-				
-				//ttbuf[6]= Number('0x'+cstu.substr(2,2));//### indexH
-				//ttbuf[7]= Number('0x'+cstu.substr(4,2));//### indexL (0:off/1:on)
-				
-				ttbuf[6]= Number('0x'+cstu.substr(2,2));  //0### flag (0x00)
-				ttbuf[7]= Number('0x'+cstu.substr(4,2));  //1### keycode (0x91:0x98)
-				ttbuf[8]= Number('0x'+cstu.substr(6,2));  //2### keystu (0:off/1:on)
-				ttbuf[9]= Number('0x'+cstu.substr(8,2));  //3### ipadd 
-				ttbuf[10]= Number('0x'+cstu.substr(10,2));//4### reg 
-				ttbuf[11]= Number('0x'+cstu.substr(12,2));//5### subcmd 
-				ttbuf[12]= Number('0x'+cstu.substr(14,2));//6### valh
-				ttbuf[13]= Number('0x'+cstu.substr(16,2));//7### vall
-				ttbuf[14]= Number('0x'+cstu.substr(18,2));//8### groupH 
-				ttbuf[15]= Number('0x'+cstu.substr(20,2));//9### groupL
-				
-				break
-			case "LOAD": // load by index(keycode) f52006000211123411
-				ttbuf = Buffer.from(cmdcode.rs485v050.s11cmd,'hex');//"f5200d00021001230123456789abcdef10"
-				console.log(cregadd+" not x12 "+pos+cmd);	
-				ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;//ipadd 0x20
-				ttbuf[4]= pdbuffer.pdjobj.subcmd[cmd];	//subcmd code				
-				ttbuf[5]= Number("0x"+cregadd);	//### regadd data to ttbuf array
-				
-				ttbuf[6]= Number('0x'+cstu.substr(2,2));//### indexH
-				ttbuf[7]= Number('0x'+cstu.substr(4,2));//### indexL (0:off/1:on)
-				
-				//ttbuf[6]= Number('0x'+cstu.substr(2,2));  //0### flag (0x00)
-				//ttbuf[7]= Number('0x'+cstu.substr(4,2));  //1### keycode (0x91:0x98)
-				//ttbuf[8]= Number('0x'+cstu.substr(6,2));  //2### keystu (0:off/1:on)
-				//ttbuf[9]= Number('0x'+cstu.substr(8,2));  //3### ipadd 
-				//ttbuf[10]= Number('0x'+cstu.substr(10,2));//4### reg 
-				//ttbuf[11]= Number('0x'+cstu.substr(12,2));//5### subcmd 
-				//ttbuf[12]= Number('0x'+cstu.substr(14,2));//6### valh
-				//ttbuf[13]= Number('0x'+cstu.substr(16,2));//7### vall
-				//ttbuf[14]= Number('0x'+cstu.substr(18,2));//8### groupH 
-				//ttbuf[15]= Number('0x'+cstu.substr(20,2));//9### groupL
-							
-				break
-			case "AUTO": //call the keycode event 
-				console.log(cregadd+" not x13 "+pos+cmd);	
-				ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;//ipadd 0x20
-				ttbuf[4]= pdbuffer.pdjobj.subcmd[cmd];	//subcmd code				
-				ttbuf[5]= Number("0x"+cregadd);	//### regadd data to ttbuf array
-				//ttbuf[6]= Number('0x'+cstu.substr(2,2));//### indexH
-				//ttbuf[7]= Number('0x'+cstu.substr(4,2));//### indexL (0:off/1:on)
-				
-				ttbuf[6]= Number('0x'+cstu.substr(2,2));  //0### flag (0x00)
-				ttbuf[7]= Number('0x'+cstu.substr(4,2));  //1### keycode (0x91:0x98)
-				ttbuf[8]= Number('0x'+cstu.substr(6,2));  //2### keystu (0:off/1:on)
-				ttbuf[9]= Number('0x'+cstu.substr(8,2));  //3### ipadd 
-				ttbuf[10]= Number('0x'+cstu.substr(10,2));//4### reg 
-				ttbuf[11]= Number('0x'+cstu.substr(12,2));//5### subcmd 
-				ttbuf[12]= Number('0x'+cstu.substr(14,2));//6### valh
-				ttbuf[13]= Number('0x'+cstu.substr(16,2));//7### vall
-				ttbuf[14]= Number('0x'+cstu.substr(18,2));//8### groupH 
-				ttbuf[15]= Number('0x'+cstu.substr(20,2));//9### groupL
-				//return
-				break
-			case "SET"://update the index
-				console.log(cregadd+" not x14 "+pos+cmd);	
-				ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;//ipadd 0x20
-				ttbuf[4]= pdbuffer.pdjobj.subcmd[cmd];	//subcmd code				
-				ttbuf[5]= Number("0x"+cregadd);	//### regadd data to ttbuf array
-				//ttbuf[6]= Number('0x'+cstu.substr(2,2));//### indexH
-				//ttbuf[7]= Number('0x'+cstu.substr(4,2));//### indexL (0:off/1:on)
-				
-				ttbuf[6]= Number('0x'+cstu.substr(2,2));  //0### flag (0x00)
-				ttbuf[7]= Number('0x'+cstu.substr(4,2));  //1### keycode (0x91:0x98)
-				ttbuf[8]= Number('0x'+cstu.substr(6,2));  //2### keystu (0:off/1:on)
-				ttbuf[9]= Number('0x'+cstu.substr(8,2));  //3### ipadd 
-				ttbuf[10]= Number('0x'+cstu.substr(10,2));//4### reg 
-				ttbuf[11]= Number('0x'+cstu.substr(12,2));//5### subcmd 
-				ttbuf[12]= Number('0x'+cstu.substr(14,2));//6### valh
-				ttbuf[13]= Number('0x'+cstu.substr(16,2));//7### vall
-				ttbuf[14]= Number('0x'+cstu.substr(18,2));//8### groupH 
-				ttbuf[15]= Number('0x'+cstu.substr(20,2));//9### groupL
-				break
-			case "LOW"://del last
-				console.log(cregadd+" not x15x "+pos+cmd);	
-				ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;//ipadd 0x20
-				ttbuf[4]= pdbuffer.pdjobj.subcmd[cmd];	//subcmd code				
-				ttbuf[5]= Number("0x"+cregadd);	//### regadd data to ttbuf array
-				//ttbuf[6]= Number('0x'+cstu.substr(2,2));//### indexH
-				//ttbuf[7]= Number('0x'+cstu.substr(4,2));//### indexL (0:off/1:on)
-				
-				ttbuf[6]= Number('0x'+cstu.substr(2,2));  //0### flag (0x00)
-				ttbuf[7]= Number('0x'+cstu.substr(4,2));  //1### keycode (0x91:0x98)
-				ttbuf[8]= Number('0x'+cstu.substr(6,2));  //2### keystu (0:off/1:on)
-				ttbuf[9]= Number('0x'+cstu.substr(8,2));  //3### ipadd 
-				ttbuf[10]= Number('0x'+cstu.substr(10,2));//4### reg 
-				ttbuf[11]= Number('0x'+cstu.substr(12,2));//5### subcmd 
-				ttbuf[12]= Number('0x'+cstu.substr(14,2));//6### valh
-				ttbuf[13]= Number('0x'+cstu.substr(16,2));//7### vall
-				ttbuf[14]= Number('0x'+cstu.substr(18,2));//8### groupH 
-				ttbuf[15]= Number('0x'+cstu.substr(20,2));//9### groupL
-					
-				break
-			case "HI"://add a new 
-				console.log(cregadd+" not x16 "+pos+cmd);	
-				ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;//ipadd 0x20
-				ttbuf[4]= pdbuffer.pdjobj.subcmd[cmd];	//subcmd code				
-				ttbuf[5]= Number("0x"+cregadd);	//### regadd data to ttbuf array
-				//ttbuf[6]= Number('0x'+cstu.substr(2,2));//### indexH
-				//ttbuf[7]= Number('0x'+cstu.substr(4,2));//### indexL (0:off/1:on)
-				
-				ttbuf[6]= Number('0x'+cstu.substr(2,2));  //0### flag (0x00)
-				ttbuf[7]= Number('0x'+cstu.substr(4,2));  //1### keycode (0x91:0x98)
-				ttbuf[8]= Number('0x'+cstu.substr(6,2));  //2### keystu (0:off/1:on)
-				ttbuf[9]= Number('0x'+cstu.substr(8,2));  //3### ipadd 
-				ttbuf[10]= Number('0x'+cstu.substr(10,2));//4### reg 
-				ttbuf[11]= Number('0x'+cstu.substr(12,2));//5### subcmd 
-				ttbuf[12]= Number('0x'+cstu.substr(14,2));//6### valh
-				ttbuf[13]= Number('0x'+cstu.substr(16,2));//7### vall
-				ttbuf[14]= Number('0x'+cstu.substr(18,2));//8### groupH 
-				ttbuf[15]= Number('0x'+cstu.substr(20,2));//9### groupL
-				break
-			case "ALARM":
-				return
-				break
-			case "MODELOOP":
-				return
-				break
-			case "MODETRIG":
-				return
-				break
-			default:
-				console.log(cregadd+" not define =>"+cmd);	
-				return
-		}
-		
-		console.log("send:"+ttbuf.toString('hex'));
-		pdbuffer.totxbuff(ttbuf);	
-				
-	});	
-});
-
-router.get('/KEYEVCOUNT',function(req,res,next){	
-	console.log(req.query);	
-	let cmd = req.query.Action
-	let uuid = req.query.UUID
-	let pos = req.query.POS
-	let group = Number(req.query.GROUP)
-	let cstu = req.query.STU
-	
-	//console.log("API cmd ="+cmd+" uuid="+uuid+" pos="+pos+" group="+group);
-	apipamcheck(res,cmd,uuid,pos,group,cstu,()=>{
-		let cmdindex=0
-		if(cmd in pdbuffer.pdjobj.subcmd)cmdindex = pdbuffer.pdjobj.subcmd[cmd]
-		//let regadd = Number("0x"+cstu.substr(0,2))
-		let cregadd = cstu.substr(0,2)
-		let	nstu = Number('0x'+cstu.substr(2))
-		let ttbuf = ""	
-		ttbuf = Buffer.from(cmdcode.rs485v050.s11cmd,'hex');//"f5200300021111"
-		if(pos in pdbuffer.pdjobj.PDDATA.Devtab){ //check pos is working
-		   ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;
-		}else{			
-		   return;
-		}
-		if(cregadd in pdbuffer.pdjobj.PDDATA.Devtab[pos]["C70"]["chtab"]){ //check subcmd is working
-		    pdbuffer.pdjobj.PDDATA.Devtab[pos]["C70"]["chtab"][cregadd].sub=cmdindex;			
-		    pdbuffer.pdjobj.PDDATA.Devtab[pos]["C70"]["chtab"][cregadd].stu=0;
-		}else{
-		   //ttbuf[6]=0x55
-		   console.log(cregadd+" not maping => "+pos);
-		   return;
-		}	
-		
-		switch(cmd){
-			case "OFF":
-				return
-				break
-			case "ON":	
-				return
-				break
-			case "LOAD":
-				console.log(cregadd+" not x12 "+pos+cmd);	
-				ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;//ipadd 0x20
-				ttbuf[4]= pdbuffer.pdjobj.subcmd[cmd];	//subcmd code				
-				ttbuf[5]= Number("0x"+cregadd);	//### regadd data to ttbuf array
-				
-				ttbuf[6]= Number('0x'+cstu.substr(2,2));//### indexH
-				ttbuf[7]= Number('0x'+cstu.substr(4,2));//### indexL (0:off/1:on)			
-				break
-			case "AUTO":
-				return
-				break
-			case "LOW":
-				return
-				break
-			case "HI":		
-				break
-			case "ALARM":
-				return
-				break
-			case "MODELOOP":
-				return
-				break
-			case "MODETRIG":
-				return
-				break
-			default:
-				console.log(cregadd+" not define =>"+cmd);	
-				return
-		}
-		
-		console.log("send:"+ttbuf.toString('hex'));
-		pdbuffer.totxbuff(ttbuf);	
-				
-	});	
-});
-
-router.get('/KEYEVGROUP',function(req,res,next){	
-	console.log(req.query);	
-	let cmd = req.query.Action
-	let uuid = req.query.UUID
-	let pos = req.query.POS
-	let group = Number(req.query.GROUP)
-	let cstu = req.query.STU
-	
-	//console.log("API cmd ="+cmd+" uuid="+uuid+" pos="+pos+" group="+group);
-	apipamcheck(res,cmd,uuid,pos,group,cstu,()=>{
-		let cmdindex=0
-		if(cmd in pdbuffer.pdjobj.subcmd)cmdindex = pdbuffer.pdjobj.subcmd[cmd]
-		//let regadd = Number("0x"+cstu.substr(0,2))
-		let cregadd = cstu.substr(0,2)
-		let	nstu = Number('0x'+cstu.substr(2))
-		let ttbuf = ""	
-		ttbuf = Buffer.from(cmdcode.rs485v050.s14cmd,'hex');//"f5 20 08 00 02 14 12 34 12 34 13"
-		if(pos in pdbuffer.pdjobj.PDDATA.Devtab){ //check pos is working 
-		   ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;
-		}else{			
-		   return;
-		}
-		if(cregadd in pdbuffer.pdjobj.PDDATA.Devtab[pos]["C70"]["chtab"]){ //check typecmd reg is working
-		    pdbuffer.pdjobj.PDDATA.Devtab[pos]["C70"]["chtab"][cregadd].sub=cmdindex;			
-		    pdbuffer.pdjobj.PDDATA.Devtab[pos]["C70"]["chtab"][cregadd].stu=0;
-		}else{
-		   //ttbuf[6]=0x55
-		   console.log(cregadd+" not maping => "+pos);
-		   return;
-		}	
-		
-		switch(cmd){//sch subcmd //"f5 20 08 00 02 14 12 34 12 34 13" 14920000A0
-			case "OFF":
-				console.log(cregadd+"  keygroupx10 "+pos+cmd+cstu);	
-				ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;//ipadd 0x20
-				ttbuf[4]= pdbuffer.pdjobj.subcmd[cmd];	//subcmd code				
-				ttbuf[5]= Number("0x"+cregadd);	//### regadd data to ttbuf array
-				
-				ttbuf[6]= Number('0x'+cstu.substr(2,2));//### indexH
-				ttbuf[7]= Number('0x'+cstu.substr(4,2));//### indexL (0:off/1:on)
-				
-				ttbuf[8]= Number('0x'+cstu.substr(6,2));//### indexH
-				ttbuf[9]= Number('0x'+cstu.substr(8,2));//### indexL (0:off/1:on)	
-				break
-			case "SET":
-				console.log(cregadd+" keygroupx11 "+pos+cmd);	
-				ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;//ipadd 0x20
-				ttbuf[4]= pdbuffer.pdjobj.subcmd[cmd];	//subcmd code				
-				ttbuf[5]= Number("0x"+cregadd);	//### regadd data to ttbuf array
-				
-				ttbuf[6]= Number('0x'+cstu.substr(2,2));//### keycode
-				ttbuf[7]= Number('0x'+cstu.substr(4,2));//### keystu (0:off/1:on)
-				
-				ttbuf[8]= Number('0x'+cstu.substr(6,2));//### group H
-				ttbuf[9]= Number('0x'+cstu.substr(8,2));//### group L  				
-				break
-			case "AUTO":
-				console.log(cregadd+" keygroupx12 "+pos+cmd);	
-				ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;//ipadd 0x20
-				ttbuf[4]= pdbuffer.pdjobj.subcmd[cmd];	//subcmd code				
-				ttbuf[5]= Number("0x"+cregadd);	//### regadd data to ttbuf array
-				
-				ttbuf[6]= Number('0x'+cstu.substr(2,2));//### keycode
-				ttbuf[7]= Number('0x'+cstu.substr(4,2));//### keystu (0:off/1:on)
-				
-				ttbuf[8]= Number('0x'+cstu.substr(6,2));//### group H
-				ttbuf[9]= Number('0x'+cstu.substr(8,2));//### group L  
-				break
-			default:
-				console.log(cregadd+" not define =>"+cmd);	
-				return
-		}
-		
-		console.log("send:"+ttbuf.toString('hex'));
-		pdbuffer.totxbuff(ttbuf);	
-				
-	});	
-});
-
-router.get('/KEYEVGROUPINIT',function(req,res,next){	
-	console.log(req.query);	
-	let cmd = req.query.Action
-	let uuid = req.query.UUID
-	let pos = req.query.POS
-	let group = Number(req.query.GROUP)
-	let cstu = req.query.STU
-	
-	//console.log("API cmd ="+cmd+" uuid="+uuid+" pos="+pos+" group="+group);
-	apipamcheck(res,cmd,uuid,pos,group,cstu,()=>{
-		let cmdindex=0
-		if(cmd in pdbuffer.pdjobj.subcmd)cmdindex = pdbuffer.pdjobj.subcmd[cmd]
-		//let regadd = Number("0x"+cstu.substr(0,2))
-		let cregadd = cstu.substr(0,2)
-		let	nstu = Number('0x'+cstu.substr(2))
-		let ttbuf = ""	
-		ttbuf = Buffer.from(cmdcode.rs485v050.s14cmd,'hex');//"f5 20 08 00 02 14 12 34 12 34 13"
-		if(pos in pdbuffer.pdjobj.PDDATA.Devtab){ //check pos is working 
-		   ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;
-		}else{			
-		   return;
-		}
-		if(cregadd in pdbuffer.pdjobj.PDDATA.Devtab[pos]["C70"]["chtab"]){ //check typecmd reg is working
-		    pdbuffer.pdjobj.PDDATA.Devtab[pos]["C70"]["chtab"][cregadd].sub=cmdindex;			
-		    pdbuffer.pdjobj.PDDATA.Devtab[pos]["C70"]["chtab"][cregadd].stu=0;
-		}else{
-		   //ttbuf[6]=0x55
-		   console.log(cregadd+" not maping => "+pos);
-		   return;
-		}	
-		
-		switch(cmd){//sch subcmd //"f5 20 08 00 02 14 12 34 12 34 13" 14920000A0
-			case "OFF":
-				console.log(cregadd+" keygroupx11 "+pos+cmd);	
-				ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;//ipadd 0x20
-				ttbuf[4]= pdbuffer.pdjobj.subcmd[cmd];	//subcmd code				
-				ttbuf[5]= Number("0x"+cregadd);	//### regadd data to ttbuf array
-				pdbuffer.totxbuff(ttbuf);	
-				break
-			case "SET":
-				console.log(cregadd+" keygroupx11 "+pos+cmd);	
-				ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;//ipadd 0x20
-				ttbuf[4]= pdbuffer.pdjobj.subcmd[cmd];	//subcmd code				
-				ttbuf[5]= Number("0x"+cregadd);	//### regadd data to ttbuf array
-				
-				for(kk in pdbuffer.jkeypd.KEYLIB.KEYPAD2 ){					
-					//ttbuf[6]= Number('0x'+kk.substr(2,2));//### keycode
-					if(kk.substr(0,1)=="K"){
-						console.log(">>keycode="+kk.substr(2,2))
-						console.log(">>>>keygroup="+pdbuffer.jkeypd.KEYLIB.KEYPAD2[kk]["STATUS"]["GROUP"]);
-						ttbuf[6]= Number('0x'+kk.substr(2,2));//### keycode
-						ttbuf[7]= 0x01;//### keystu (0:off/1:on)
-				
-						ttbuf[8]= 0x00;//### group H
-						ttbuf[9]= Number('0x'+pdbuffer.jkeypd.KEYLIB.KEYPAD2[kk]["STATUS"]["GROUP"]);//### group L  
-						
-						console.log("send:"+ttbuf.toString('hex'));
-						pdbuffer.totxbuff(ttbuf);	
-						
-					}
-				}
-				//ttbuf[6]= Number('0x'+cstu.substr(2,2));//### keycode
-				//ttbuf[7]= Number('0x'+cstu.substr(4,2));//### keystu (0:off/1:on)
-				
-				//ttbuf[8]= Number('0x'+cstu.substr(6,2));//### group H
-				//ttbuf[9]= Number('0x'+cstu.substr(8,2));//### group L  				
-				break
-			case "ON":
-				console.log(cregadd+" keygroupx11 "+pos+cmd);	
-				ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;//ipadd 0x20
-				ttbuf[4]= pdbuffer.pdjobj.subcmd[cmd];	//subcmd code				
-				ttbuf[5]= Number("0x"+cregadd);	//### regadd data to ttbuf array
-				pdbuffer.totxbuff(ttbuf);	
-				break
-			default:
-				console.log(cregadd+" not define =>"+cmd);	
-				return
-		}
-		
-		//console.log("send:"+ttbuf.toString('hex'));
-		//pdbuffer.totxbuff(ttbuf);	
-				
-	});	
-});
-
-
+  
 //system ATUO JSON formt data load and set to buffer 
 const webuiautokey = {
 	"GROWLED":0,"CYCLEFAN":0,"SPRAY":0,"REFRESH":0,"UV":0,"PUMP":0,"GROWUPDOWN":0,
 	"AIRCON":0,"AIRRH":0,"WATERTM":0,"CO2":0,"OPWAVE":0,"DOSE":0
 }
 
+//=====================================================
+// auto function active api command 
 //=====================================================
 router.get('/AUTOSETUP',function(req,res,next){	//ok	
 	console.log(req.query);	
@@ -1010,7 +182,7 @@ router.get('/AUTOSETUP',function(req,res,next){	//ok
 		
 		if(cmd in pdbuffer.pdjobj.subcmd)cmdindex = pdbuffer.pdjobj.subcmd[cmd]
 			
-		if(pos in pdbuffer.jautocmd.DEVLIST){ //check pos is working 
+		if((pos in pdbuffer.jautocmd.DEVLIST) || (pos in pdbuffer.jautocmd.WATERLOOP) ){ //check pos is working 
 			if(cmdindex <= 1){
 				console.log("OFF/ON Command only by pos = 0000");
 				res.json(jobj);
@@ -1026,12 +198,12 @@ router.get('/AUTOSETUP',function(req,res,next){	//ok
 					return;//if new POS must use SET
 				}
 			}else {
-				if(cmdindex > 1){//ON/OFF by 0000
-					if(cmdindex != 3){//AUTO by 0000
-						console.log("OFF/ON Command only by pos = 0000");
+				if(cmdindex > 1){//ON=1/OFF=0 by 0000
+					if(cmdindex != 3 && cmdindex!=4){//AUTO==3 by 0000 or SET==4 by 0000
+						console.log(" AUTO/SET Command only by pos = 0000");
 						res.json(jobj);
-				//console.log(">>autox13");
-						return;// OFF /ON must POS="0000"
+						//console.log(">>autox13");
+						return;// OFF/ON must POS="0000"
 					}
 				}
 			}
@@ -1039,21 +211,25 @@ router.get('/AUTOSETUP',function(req,res,next){	//ok
 
 		jobj = {  "success" : "true"  }; 
 		switch(cmd){//sch subcmd //"f5 20 08 00 02 14 12 34 12 34 13" 14920000A0
-			case "OFF":
+			case "OFF"://reload all auto JSON to buffer
 				res.json(jobj);
 				if(pos == "0000")pdbuffer.jautocmd_load(()=>{
 					console.log("JAUTO reload ok !");
 					autocmd.reload_autojob();//relaod auto json to buffer 
 				});//reload files to buffer
 				break
-			case "ON":
+			case "ON"://save buffer to JSON files 
 				res.json(jobj);
 				if(pos == "0000")pdbuffer.jautocmd_update(()=>{
 					console.log("JAUTO Save ok !");
 				});//update buffer to Files
 				break
-			case "LOAD":			
-				jobj = pdbuffer.jautocmd.DEVLIST[pos];
+			case "LOAD":
+				if(cstu == "02"){					
+					jobj = pdbuffer.jautocmd.WATERLOOP[pos];
+				}else{	
+					jobj = pdbuffer.jautocmd.DEVLIST[pos];
+				}
 				res.json(jobj);	
 				break
 			case "AUTO":
@@ -1077,39 +253,191 @@ router.get('/AUTOSETUP',function(req,res,next){	//ok
 						}
 					}					
 				}else{
-					if(cstu == "00"){
+					if(cstu == "00"){//DEVLIST AUTO OFF
 						pdbuffer.jautocmd.DEVLIST[pos].STATU=0;
 						if(pos in autocmd.sch_autojob)autocmd.sch_autojob[pos].STATU=0;
 					}
-					if(cstu == "01"){
+					if(cstu == "01"){//DEVLIST AUTO ON
 						pdbuffer.jautocmd.DEVLIST[pos].STATU=1;
 						if(pos in autocmd.sch_autojob)autocmd.sch_autojob[pos].STATU=1;
 					}
+					if(cstu == "02"){//WATERLOOP mode5 OFF
+						pdbuffer.jautocmd.WATERLOOP[pos].SENSOR_CONTROL=0;
+						pdbuffer.jautocmd.WATERLOOP[pos].STATU=0;	
+						if(pos == "autotmloop"){
+							tmlab="TEMPERATURE!LOOP";
+							setrangss = pdbuffer.jautocmd.DEVLIST.AIRCON.RUNLOOP[tmlab];
+							settmlow = setrangss.substr(0,4);
+							settmhi = setrangss.substr(4,4);
+							//console.log("loadx1 low , hi ="+settmlow+" "+settmhi);
+							pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.INTM_LOW = Number(settmhi);
+							
+							pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.INTM_LEVLIST[2]= Number(settmhi);
+							pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.INTM_LEVLISTUP[2]= Number(settmhi)+20;
+							pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.INTM_LEVLISTDOWN[2]= Number(settmhi)-20;
+							
+							pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.INTM_LEVLIST[1]= Number(settmlow);
+							pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.INTM_LEVLISTUP[1]= Number(settmlow)+20;
+							pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.INTM_LEVLISTDOWN[1]= Number(settmlow)-20;
+							
+							pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.OUTTM_LOW = Number(settmhi);
+							pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.OUTTM_LEVLIST[2]= Number(settmhi);
+							pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.OUTTM_LEVLIST[1]= Number(settmlow);
+							
+						}
+					}
+					if(cstu == "03"){//WATERLOOP mode5 ON
+						pdbuffer.jautocmd.WATERLOOP[pos].SENSOR_CONTROL=0;
+						pdbuffer.jautocmd.WATERLOOP[pos].STATU=1;	
+						if(pos == "autotmloop"){
+							tmlab="TEMPERATURE!LOOP";
+							setrangss = pdbuffer.jautocmd.DEVLIST.AIRCON.RUNLOOP[tmlab];
+							settmlow = setrangss.substr(0,4);
+							settmhi = setrangss.substr(4,4);
+							console.log("loadx2 low , hi ="+settmlow+" "+settmhi);
+							pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.INTM_LOW = Number(settmhi);
+							
+							pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.INTM_LEVLIST[2]= Number(settmhi);
+							pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.INTM_LEVLISTUP[2]= Number(settmhi)+20;
+							pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.INTM_LEVLISTDOWN[2]= Number(settmhi)-20;
+							
+							pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.INTM_LEVLIST[1]= Number(settmlow);
+							pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.INTM_LEVLISTUP[1]= Number(settmlow)+20;
+							pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.INTM_LEVLISTDOWN[1]= Number(settmlow)-20;
+							
+							pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.OUTTM_LOW = Number(settmhi);
+							pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.OUTTM_LEVLIST[2]= Number(settmhi);
+							pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.OUTTM_LEVLIST[1]= Number(settmlow);
+						}
+					}
+					//keep the auto save up to buffer ### 20180913 by QA aircon test use 
+					pdbuffer.jautocmd_update(()=>{
+							console.log("JAUTO Save ok !");
+					});//update buffer to Files
+					
 				}
 				//####
+				
 				break
 			case "SET":
 				res.json(jobj);
 				
+				if(pos == "0000"){//when pos ="0000" is load default auto json 
+					for(jaa in pdbuffer.jautocmd.DEFAUTOLIST){
+						pdbuffer.jautocmd.DEVLIST[jaa] = pdbuffer.jautocmd.DEFAUTOLIST[jaa];
+					}
+					pdbuffer.jautocmd_update(()=>{
+						console.log("JAUTO Save ok !");
+									
+					});//update buffer to Files
+					return;
+				}
+				
 				//autojsonloadurl = "http://tscloud.opcom.com/Cloud/API/v2/AUTOJSON?SID="+cstu;
 				autojsonloadurl =  pdbuffer.pdjobj.PDDATA.v2autojsonloadurl+"?SID="+cstu;
 				console.log("get ok...["+pos+"] link>>"+autojsonloadurl);
-				client.get(autojsonloadurl, function (data, response) {
-					
-					console.log("get auto json ok...["+pos+"]>>"+JSON.stringify(data));
-					//jobj = jobjcopy(response)
-					jobj =  jobjcopy(data);
-					if("MODE" in jobj){//check is auto JSON format 
-						//console.log(">>autox43");
-						pdbuffer.jautocmd.DEVLIST[pos] =  jobjcopy(jobj);
-						autocmd.load_autojob(pos,pdbuffer.jautocmd.DEVLIST[pos]);//load json to buffer 
+				if(pos == "DOSE"){					
+					client.get(autojsonloadurl, function (data, response) {	
+						console.log("get auto json ok...["+pos+"]>>"+JSON.stringify(data));
+						//console.log("get auto json ok...sch_autoloadmark ="+JSON.stringify(autocmd.sch_autoloadmark));						
+						if(!((typeof data) == 'object'))return;
+						
+						ddjdata = jobjcopy(data);
+						if("DOSEA" in ddjdata){
+							for(dda in ddjdata.DOSEA.SCHEDULE.EPOS){
+								sec02val = Number(ddjdata.DOSEA.SCHEDULE.EPOS[dda].STU.substr(2,4));
+								sec02str = "0000"+sec02val.toString(16)
+								sec02valhex = ddjdata.DOSEA.SCHEDULE.EPOS[dda].STU.substr(0,2)+sec02str.substr((sec02str.length-4),4);
+								ddjdata.DOSEA.SCHEDULE.EPOS[dda].STU = sec02valhex;		
+							}
+							pdbuffer.jautocmd.DEVLIST.DOSEA = jobjcopy(ddjdata.DOSEA);
+							pdbuffer.jautocmd.DEVLIST.DOSEA.STATU=1;
+							autocmd.load_autojob("DOSEA",pdbuffer.jautocmd.DEVLIST.DOSEA)
+							if("DOSEA" in autocmd.sch_autojob)autocmd.sch_autojob.DOSEA.STATU=1;
+							if(!("DOSEA" in autocmd.sch_autoloadmark))autocmd.sch_autoloadmark.DOSEA=0;
+						};
+						if("DOSEB" in ddjdata){
+							for(dda in ddjdata.DOSEB.SCHEDULE.EPOS){
+								sec02val = Number(ddjdata.DOSEB.SCHEDULE.EPOS[dda].STU.substr(2,4));
+								sec02str = "0000"+sec02val.toString(16)
+								sec02valhex = ddjdata.DOSEB.SCHEDULE.EPOS[dda].STU.substr(0,2)+sec02str.substr((sec02str.length-4),4);
+								ddjdata.DOSEB.SCHEDULE.EPOS[dda].STU = sec02valhex;		
+							}
+							pdbuffer.jautocmd.DEVLIST.DOSEB = jobjcopy(ddjdata.DOSEB);
+							pdbuffer.jautocmd.DEVLIST.DOSEB.STATU=1;
+							autocmd.load_autojob("DOSEB",pdbuffer.jautocmd.DEVLIST.DOSEB)
+							if("DOSEB" in autocmd.sch_autojob)autocmd.sch_autojob.DOSEB.STATU=1;
+							if(!("DOSEB" in autocmd.sch_autoloadmark))autocmd.sch_autoloadmark.DOSEB=0; 
+						};
+						if("DOSEC" in ddjdata){
+							for(dda in ddjdata.DOSEC.SCHEDULE.EPOS){
+								sec02val = Number(ddjdata.DOSEC.SCHEDULE.EPOS[dda].STU.substr(2,4));
+								sec02str = "0000"+sec02val.toString(16)
+								sec02valhex = ddjdata.DOSEC.SCHEDULE.EPOS[dda].STU.substr(0,2)+sec02str.substr((sec02str.length-4),4);
+								ddjdata.DOSEC.SCHEDULE.EPOS[dda].STU = sec02valhex;		
+							}
+							pdbuffer.jautocmd.DEVLIST.DOSEC = jobjcopy(ddjdata.DOSEC);
+							pdbuffer.jautocmd.DEVLIST.DOSEC.STATU=1;
+							autocmd.load_autojob("DOSEC",pdbuffer.jautocmd.DEVLIST.DOSEC)
+							if("DOSEC" in autocmd.sch_autojob)autocmd.sch_autojob.DOSEC.STATU=1;
+							if(!("DOSEC" in autocmd.sch_autoloadmark))autocmd.sch_autoloadmark.DOSEC=0; 
+						};
+						if("DOSED" in ddjdata){
+							for(dda in ddjdata.DOSED.SCHEDULE.EPOS){
+								sec02val = Number(ddjdata.DOSED.SCHEDULE.EPOS[dda].STU.substr(2,4));
+								sec02str = "0000"+sec02val.toString(16)
+								sec02valhex = ddjdata.DOSED.SCHEDULE.EPOS[dda].STU.substr(0,2)+sec02str.substr((sec02str.length-4),4);
+								ddjdata.DOSED.SCHEDULE.EPOS[dda].STU = sec02valhex;		
+							}
+							pdbuffer.jautocmd.DEVLIST.DOSED = jobjcopy(ddjdata.DOSED);
+							pdbuffer.jautocmd.DEVLIST.DOSED.STATU=1;
+							autocmd.load_autojob("DOSED",pdbuffer.jautocmd.DEVLIST.DOSED)
+							if("DOSED" in autocmd.sch_autojob)autocmd.sch_autojob.DOSED.STATU=1;
+							if(!("DOSED" in autocmd.sch_autoloadmark))autocmd.sch_autoloadmark.DOSED=0; 
+						};
+						
 						pdbuffer.jautocmd_update(()=>{
-								console.log("JAUTO Save ok !");
+								console.log("DOSE A,B,C,D JAUTO Save ok !");
 						});//update buffer to Files
-					}
-				}).on("error", function(err) {console.log("err for client");});
+						
+					}).on("error", function(err) {console.log("err for client");});				
+					
+				}else if(pos == "OPWAVE"){										
+					client.get(autojsonloadurl, function (data, response) {					
+						console.log("get auto json ok...["+pos+"]>>"+JSON.stringify(data));
+						//jobj = jobjcopy(response)						
+						if(!((typeof data) == 'object'))return;
+						
+						jobj =  jobjcopy(data);
+						if("MODE" in jobj){//check is auto JSON format 
+							//console.log(">>autox43");
+							jobj.STATU=1;
+							pdbuffer.jautocmd.DEVLIST[pos] =  jobjcopy(jobj);
+							autocmd.load_autojob(pos,pdbuffer.jautocmd.DEVLIST[pos]);//load json to buffer 
+							pdbuffer.jautocmd_update(()=>{
+									console.log("JAUTO Save ok !");
+							});//update buffer to Files
+						}
+					}).on("error", function(err) {console.log("err for client");});
+				}else{						
+					client.get(autojsonloadurl, function (data, response) {					
+						console.log("get auto json ok...["+pos+"]>>"+JSON.stringify(data));
+						//jobj = jobjcopy(response)
+						if(!((typeof data) == 'object'))return;
+						
+						jobj =  jobjcopy(data);
+						if("MODE" in jobj){//check is auto JSON format 
+							//console.log(">>autox43");
+							pdbuffer.jautocmd.DEVLIST[pos] =  jobjcopy(jobj);
+							autocmd.load_autojob(pos,pdbuffer.jautocmd.DEVLIST[pos]);//load json to buffer 
+							pdbuffer.jautocmd_update(()=>{
+									console.log("JAUTO Save ok !");
+							});//update buffer to Files
+						}
+					}).on("error", function(err) {console.log("err for client");});
+				}
 				
-				break
+				break;
 			default:
 				res.json(jobj);
 				console.log(cregadd+" not define =>"+cmd);	
@@ -1119,7 +447,9 @@ router.get('/AUTOSETUP',function(req,res,next){	//ok
 	});	
 });
 
-
+//=====================================================
+// KeyPAD function command call api 
+//=====================================================
 router.get('/KEYSETUP',function(req,res,next){	//ok	
 	console.log(req.query);	
 	let cmd = req.query.Action
@@ -1185,7 +515,7 @@ router.get('/KEYSETUP',function(req,res,next){	//ok
 				break
 			case "AUTO"://POS= KEYPAD , GROUP = keyno ,STU=key action(ON/OFF/AUTO) 
 				res.json(jobj);
-				autocmd.active_keypadjob(pos,group,cstu)
+				autocmd.active_keypadjob(pos,group,cstu);//pos = KEYPAD0 , group = "K021" , STU=:ON75"
 				
 				break
 			case "SET":
@@ -1224,8 +554,517 @@ router.get('/KEYSETUP',function(req,res,next){	//ok
 	});	
 });
 
+//=====================================================
+// Device change setup ipadd by macadd  set ipadd or group code ### 20180908
+// 設備維修 更換 設定指令  參照 POS name 
+//======================================================
+router.get('/IPADDMACSETUP',function(req,res,next){	
+	console.log(req.query);	
+	let cmd = req.query.Action
+	let uuid = req.query.UUID
+	let pos = req.query.POS
+	let group = Number('0x'+req.query.GROUP)
+	let cstu = req.query.STU
+	
+	//console.log("API cmd ="+cmd+" uuid="+uuid+" pos="+pos+" group="+group);
+	apipamcheck(res,cmd,uuid,pos,group,cstu,()=>{
+		//pos = POS , STU=macadd, GROUP = group + IPADD
+		
+		let ttbuf = ""	                                    //[0] [1][2][3][4][5][6][7][8][9] [10][11][12][13][14]
+		ttbuf = Buffer.from(cmdcode.rs485v050.se1cmd,'hex');//"f5 fd  0c 00 04 e1 12 34 56 78 90   12  00  00 e1"
+
+		let ttbuf2 = ""	   //F5 IPAddr 06 12 04 1F 00 group check
+		ttbuf2 = Buffer.from(cmdcode.rs485v050.sb0cmd,'hex');
+		if(pos in pdbuffer.pdjobj.PDDATA.Devtab){ //check pos is working 
+		   ipadd = pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;
+		}else{			
+		   return;
+		}
+		if( (cstu.length <12)||(cstu.substr(0,1)!='8') )return;
+		
+		switch(cmd){//sch subcmd //"f5 20 08 00 02 14 12 34 12 34 13" 14920000A0
+			case "LOAD":
+				break
+			case "ON"://setup GROUP by IPADD
+				console.log("set pos="+pos+" ipadd="+ipadd+" group="+group+"by cmd="+cmd);	
+				
+				//set group by ipadd
+				ttbuf2[1]= ipadd;//ipadd 0x20
+				ttbuf2[4]= 0x04;	//subcmd code set		
+				ttbuf2[5]= 0x1f;	//### regadd data by ipadd setup
+				ttbuf2[6]= 0x00;	//### regadd data by ipadd setup
+				ttbuf2[7]= group;	//### regadd data by ipadd setup		  
+				
+				pdbuffer.totxbuff(ttbuf2);
+				break
+			case "SET"://setup IPADD by MACADD
+				console.log("set pos="+pos+" ipadd="+ipadd+" group="+group+"by cmd="+cmd);	
+				
+				//set ipadd by macadd 
+				ttbuf[1]= 0xfd;//ipadd 
+				ttbuf[4]= 0x04;	//subcmd code set		
+				ttbuf[5]= 0xe1;	//### regadd data by ipadd setup
+				
+				ttbuf[6]= Number('0x'+cstu.substr(0,2));//### indexH;	//### macadd 1 byte
+				ttbuf[7]= Number('0x'+cstu.substr(2,2));	//### macadd 2 byte
+				ttbuf[8]= Number('0x'+cstu.substr(4,2));	//### macadd 3 byte
+				ttbuf[9]= Number('0x'+cstu.substr(6,2));	//### macadd 4 byte
+				ttbuf[10]= Number('0x'+cstu.substr(8,2));//### macadd 5 byte
+				ttbuf[11]= Number('0x'+cstu.substr(10,2));//### macadd 6 byte
+				
+				ttbuf[12]= 0x00;//### ipadd 1 byte
+				ttbuf[13]= ipadd ;//### ipadd 2 byte
+				
+				pdbuffer.totxbuff(ttbuf);
+								
+				//set group by ipadd
+				ttbuf2[1]= ipadd;   //ipadd 
+				ttbuf2[4]= 0x04;	//subcmd code set		
+				ttbuf2[5]= 0x1f;	//### regadd data by ipadd setup
+				ttbuf2[6]= 0x00;	//### regadd data by ipadd setup
+				ttbuf2[7]= group;	//### regadd data by ipadd setup		  
+				
+				pdbuffer.totxbuff(ttbuf2);
+				//ttbuf[6]= Number('0x'+cstu.substr(2,2));//### keycode
+				//ttbuf[7]= Number('0x'+cstu.substr(4,2));//### keystu (0:off/1:on)
+				
+				//ttbuf[8]= Number('0x'+cstu.substr(6,2));//### group H
+				//ttbuf[9]= Number('0x'+cstu.substr(8,2));//### group L  				
+				break
+			default:
+				console.log(cregadd+" not define =>"+cmd);	
+				return
+		}
+		
+	});	
+});
 
 
+//=======================================================
+//device Fail funciton on/off api command KEYPAD1#K09A by PUMP alarm ,KEYPAD1#K09B by LED alarm 
+// 設備自動報警 功能開啟 或 關閉 by POS name 
+//=======================================================
+router.get('/DEVALARMSET',function(req,res,next){	
+	console.log(req.query);	
+	let cmd = req.query.Action
+	let uuid = req.query.UUID
+	let pos = req.query.POS
+	let group = Number('0x'+req.query.GROUP);
+	let cstu = req.query.STU
+	
+	//console.log("API cmd ="+cmd+" uuid="+uuid+" pos="+pos+" group="+group);
+	apipamcheck(res,cmd,uuid,pos,group,cstu,()=>{
+		//pos = POS , STU=macadd, GROUP = group + IPADD
+		//[0][1][2][3][4][5][6][7][8][9][10][11][12][13][14]
+		//f5 21 0a 00 09 20 01 2c 1f ff 00  20  ff  
+		//[6][7]=> scan delay time  [8][9]=>高值 [10][11]=>低值 [4]comm =0x09 start , 0x08 stop [5]=>REG [1]=IPADD 
+		let ttbuf = ""	                                   
+		let devalarmcmd = "f5210a000920012c1fff0020ff";     
+		ttbuf = Buffer.from(devalarmcmd,'hex');//"f5 fd  0c 00 04 e1 12 34 56 78 90   12  00  00 e1"
+
+		//let ttbuf2 = ""	   //F5 IPAddr 06 12 04 1F 00 group check
+		//ttbuf2 = Buffer.from(cmdcode.rs485v050.sb0cmd,'hex');
+		
+		if(pos in pdbuffer.pdjobj.PDDATA.Devtab){ //check pos is working 
+		   ipadd = pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;
+		}else{			
+		   return;
+		}
+		if(cstu.length <12)return;
+		//if pos = E002 then group = regadd
+		
+		switch(cmd){//sch subcmd //"f5 20 08 00 02 14 12 34 12 34 13" 14920000A0
+			case "OFF":
+				console.log("device auto alarm off pos="+pos+" ipadd="+ipadd+" group="+group+"by stu="+cstu);
+				devalarmcmd = "f5210a0008200000ff";     
+				ttbuf = Buffer.from(devalarmcmd,'hex');//"f5 fd  0c 00 04 e1 12 34 56 78 90   12  00  00 e1"
+				if(ipadd == 0x21){
+					ttbuf[1]= 0x21;		//ipadd 	
+					ttbuf[4]= 0x08;		//### subcmd setup
+					ttbuf[5]= group;	//### regadd data by ipadd setup
+					
+					pdbuffer.totxbuff(ttbuf);
+				}else{
+					ttbuf[1]= ipadd;	//ipadd 	
+					ttbuf[4]= 0x08;		//### subcmd setup
+					ttbuf[5]= 0x20;		//### regadd data by ipadd setup
+					
+					pdbuffer.totxbuff(ttbuf);
+				}
+				break
+			case "ON"://setup GROUP by IPADD
+				console.log("device auto alarm on pos="+pos+" ipadd="+ipadd+" group="+group+"by stu="+cstu);	
+				devalarmcmd = "f5210a000920012c1fff0020ff";     
+				ttbuf = Buffer.from(devalarmcmd,'hex');//"f5 fd  0c 00 04 e1 12 34 56 78 90   12  00  00 e1"
+				if(ipadd == 0x21){					
+					ttbuf[1]= 0x21;		//ipadd 	
+					ttbuf[4]= 0x09;		//### subcmd setup
+					ttbuf[5]= group;	//### regadd data by ipadd setup
+					
+					ttbuf[6]= Number('0x'+cstu.substr(0,2));	//### checktime hi byte
+					ttbuf[7]= Number('0x'+cstu.substr(2,2));	//### checktime low byte
+					ttbuf[8]= Number('0x'+cstu.substr(4,2));	//### upchk hi byte
+					ttbuf[9]= Number('0x'+cstu.substr(6,2));	//### upchk low byte
+					ttbuf[10]= Number('0x'+cstu.substr(8,2));	//### downchk hi byte
+					ttbuf[11]= Number('0x'+cstu.substr(10,2));	//### downchk low byte
+					
+					pdbuffer.totxbuff(ttbuf);
+				}else{
+					ttbuf[1]= ipadd;	//ipadd 	
+					ttbuf[4]= 0x09;		//### subcmd setup
+					ttbuf[5]= 0x20;		//### regadd data by ipadd setup
+					
+					ttbuf[6]= Number('0x'+cstu.substr(0,2));	//### checktime hi byte
+					ttbuf[7]= Number('0x'+cstu.substr(2,2));	//### checktime low byte
+					ttbuf[8]= Number('0x'+cstu.substr(4,2));	//### upchk hi byte
+					ttbuf[9]= Number('0x'+cstu.substr(6,2));	//### upchk low byte
+					ttbuf[10]= Number('0x'+cstu.substr(8,2));	//### downchk hi byte
+					ttbuf[11]= Number('0x'+cstu.substr(10,2));	//### downchk low byte
+					
+					pdbuffer.totxbuff(ttbuf);
+				}
+				break
+			default:
+				console.log(cregadd+" not define =>"+cmd);	
+				return
+		}
+		
+	});	
+});
+
+//=======================================================
+// TEMPERATURE = 0000, RH=0001,CO2=0002 
+// sensor offset 校正值 操作介面 API
+//=======================================================
+router.get('/TMDEVICECAL',function(req,res,next){	
+	console.log(req.query);	
+	let cmd = req.query.Action
+	let uuid = req.query.UUID
+	let pos = req.query.POS
+	let group = Number(req.query.GROUP)
+	let cstu = req.query.STU
+	
+	//console.log("API cmd ="+cmd+" uuid="+uuid+" pos="+pos+" group="+group);
+	vcmdapipamcheck(res,cmd,uuid,pos,group,cstu,()=>{
+		
+		
+		jobj = {  "success" : "true"  }; 
+		switch(cmd){//sch subcmd //"f5 20 08 00 02 14 12 34 12 34 13" 14920000A0
+			case "LOAD":	
+				//pdbuffer.jautocmd.DEVICESET.CHKLOADTM.H001 = 31;
+				//pdbuffer.jautocmd.DEVICESET.CHKLOADTM.H002 = 32;
+				//pdbuffer.jautocmd.DEVICESET.CHKLOADTM.H003 = 33;
+				//pdbuffer.jautocmd.DEVICESET.CHKLOADTM.H004 = 34;
+				//pdbuffer.jautocmd.DEVICESET.CHKLOADTM.H005 = 35;
+				//pdbuffer.jautocmd.DEVICESET.CHKLOADTM.H006 = 36;
+				//pdbuffer.jautocmd.DEVICESET.CHKLOADTM.E002 = 37;
+				
+				if(pos == "0000")jobj = jobjcopy(pdbuffer.jautocmd.DEVICESET.CHKLOADTM);//LOAD TM
+				if(pos == "0001")jobj = jobjcopy(pdbuffer.jautocmd.DEVICESET.CHKLOADRH);//LOAD RH
+				if(pos == "0002")jobj = jobjcopy(pdbuffer.jautocmd.DEVICESET.CHKLOADCO2);//LOAD CO2
+				
+				console.log(JSON.stringify(jobj));
+				res.json(jobj);	
+				break
+			case "SET":
+				res.json(jobj);
+				tmdat = cstu.split(",");
+				
+				if(pos=="0000"){// pos="0000" is TM
+					if(tmdat.length >=7){
+						pdbuffer.jautocmd.DEVICESET.OFFSETTM.H001 =  Number(tmdat[0]);
+						pdbuffer.jautocmd.DEVICESET.OFFSETTM.H002 =  Number(tmdat[1]);
+						pdbuffer.jautocmd.DEVICESET.OFFSETTM.H003 =  Number(tmdat[2]);
+						pdbuffer.jautocmd.DEVICESET.OFFSETTM.H004 =  Number(tmdat[3]);
+						pdbuffer.jautocmd.DEVICESET.OFFSETTM.H005 =  Number(tmdat[4]);
+						pdbuffer.jautocmd.DEVICESET.OFFSETTM.H006 =  Number(tmdat[5]);
+						pdbuffer.jautocmd.DEVICESET.OFFSETTM.E002 =  Number(tmdat[6]);
+						
+						pdbuffer.jautocmd_update(()=>{
+								console.log("JAUTO Save ok !");
+						});//update buffer to Files
+					}
+					
+					jobj = jobjcopy(pdbuffer.jautocmd.DEVICESET.OFFSETTM);
+					console.log("offsetTM= "+JSON.stringify(jobj));
+				}
+				if(pos=="0001"){// pos = "0001" is RH
+					if(tmdat.length >=7){
+						pdbuffer.jautocmd.DEVICESET.OFFSETRH.H001 =  Number(tmdat[0]);
+						pdbuffer.jautocmd.DEVICESET.OFFSETRH.H002 =  Number(tmdat[1]);
+						pdbuffer.jautocmd.DEVICESET.OFFSETRH.H003 =  Number(tmdat[2]);
+						pdbuffer.jautocmd.DEVICESET.OFFSETRH.H004 =  Number(tmdat[3]);
+						pdbuffer.jautocmd.DEVICESET.OFFSETRH.H005 =  Number(tmdat[4]);
+						pdbuffer.jautocmd.DEVICESET.OFFSETRH.H006 =  Number(tmdat[5]);
+						pdbuffer.jautocmd.DEVICESET.OFFSETRH.E002 =  Number(tmdat[6]);
+						
+						pdbuffer.jautocmd_update(()=>{
+								console.log("JAUTO Save ok !");
+						});//update buffer to Files
+					}
+					
+					jobj = jobjcopy(pdbuffer.jautocmd.DEVICESET.OFFSETRH);
+					console.log("offsetRH= "+JSON.stringify(jobj));
+				}				
+				if(pos=="0002"){// pos = "0002" is CO2
+					if(tmdat.length >=7){
+						pdbuffer.jautocmd.DEVICESET.OFFSETCO2.H001 =  Number(tmdat[0]);
+						pdbuffer.jautocmd.DEVICESET.OFFSETCO2.H002 =  Number(tmdat[1]);
+						pdbuffer.jautocmd.DEVICESET.OFFSETCO2.H003 =  Number(tmdat[2]);
+						pdbuffer.jautocmd.DEVICESET.OFFSETCO2.H004 =  Number(tmdat[3]);
+						pdbuffer.jautocmd.DEVICESET.OFFSETCO2.H005 =  Number(tmdat[4]);
+						pdbuffer.jautocmd.DEVICESET.OFFSETCO2.H006 =  Number(tmdat[5]);
+						pdbuffer.jautocmd.DEVICESET.OFFSETCO2.E002 =  Number(tmdat[6]);
+						
+						pdbuffer.jautocmd_update(()=>{
+								console.log("JAUTO Save ok !");
+						});//update buffer to Files
+					}
+					
+					jobj = jobjcopy(pdbuffer.jautocmd.DEVICESET.OFFSETCO2);
+					console.log("offsetCO2= "+JSON.stringify(jobj));
+				}
+				
+				break;
+			default:
+				res.json(jobj);
+				console.log(cregadd+" not define =>"+cmd);	
+				return
+		}
+	});	
+});
+
+//=======================================================
+//TEMPERATURE AUTO Controk DEMO 
+//溫控 LiveDEMO 操作介面 API 
+//=======================================================
+router.get('/TMLIVEDEMO',function(req,res,next){	
+	console.log(req.query);	
+	let cmd = req.query.Action
+	let uuid = req.query.UUID
+	let pos = req.query.POS
+	let group = Number(req.query.GROUP)
+	let cstu = req.query.STU
+	
+	//console.log("API cmd ="+cmd+" uuid="+uuid+" pos="+pos+" group="+group);
+	vcmdapipamcheck(res,cmd,uuid,pos,group,cstu,()=>{
+		
+		jobj = {  "success" : "true"  }; 
+		switch(cmd){//sch subcmd //"f5 20 08 00 02 14 12 34 12 34 13" 14920000A0
+			case "ON":
+				res.json(jobj);
+				console.log("tmdemo cstu = "+cstu);
+				
+				if(cstu=="LEDON")pdbuffer.jautocmd.WATERLOOP.tmdemoloop.SENSOR_CONTROL = 21;
+				if(cstu=="LEDOFF")pdbuffer.jautocmd.WATERLOOP.tmdemoloop.SENSOR_CONTROL = 31;
+				pdbuffer.jautocmd.WATERLOOP.tmdemoloop.CHKLOOP.CHKVALUE.OUTMODE = group;
+				pdbuffer.jautocmd.WATERLOOP.tmdemoloop.STATU = 1;
+				
+				democtiveurl = "http://106.104.112.56/Cloud/API/v2/Demotest.php?UUID="+pdbuffer.setuuid+"&STU=1"
+				console.log(">>tm demo mode send to =>"+democtiveurl);
+				client.get(democtiveurl, function (data, response) {
+					console.log("demo client active  ok ...");
+				}).on("error", function(err) {console.log("err for client");});			
+				
+				democtiveurl = "http://192.168.5.220/API/v2/Demotest.php?UUID="+pdbuffer.setuuid+"&STU=1"
+				console.log(">>ipc tm demo mode send to =>"+democtiveurl);
+				client.get(democtiveurl, function (data, response) {
+					console.log("demo client active  ok ...");
+				}).on("error", function(err) {console.log("err for client");});			
+			
+			if(group>=1 && group <=3)autocmd.autoeventcall('sec30status_event'); 
+			
+				console.log("tmdemo cstu = "+cstu + " outmode = "+pdbuffer.jautocmd.WATERLOOP.tmdemoloop.CHKLOOP.CHKVALUE.OUTMODE);
+				break;
+			case "OFF":
+				res.json(jobj);
+				pdbuffer.jautocmd.WATERLOOP.tmdemoloop.SENSOR_CONTROL = 3;
+				pdbuffer.jautocmd.WATERLOOP.tmdemoloop.STATU = 1;
+					
+				democtiveurl = "http://106.104.112.56/Cloud/API/v2/Demotest.php?UUID="+pdbuffer.setuuid+"&STU=0"
+				console.log(">>tm demo mode send to =>"+democtiveurl);
+				client.get(democtiveurl, function (data, response) {
+					console.log("demo client active  ok ...");
+				}).on("error", function(err) {console.log("err for client");});		
+					
+				democtiveurl = "http://192.168.5.220/API/v2/Demotest.php?UUID="+pdbuffer.setuuid+"&STU=0"
+				console.log(">>ipc tm demo mode send to =>"+democtiveurl);
+				client.get(democtiveurl, function (data, response) {
+					console.log("demo client active  ok ...");
+				}).on("error", function(err) {console.log("err for client");});			
+				
+			autocmd.autoeventcall('sec30status_event'); 
+			
+				console.log("tmdemo cstu = "+cstu + " mode = "+ pdbuffer.jautocmd.WATERLOOP.tmdemoloop.SENSOR_CONTROL);	
+				
+				break;
+			default:
+				res.json(jobj);
+				console.log(cregadd+" not define =>"+cmd);	
+				return
+		}	
+				
+	});	
+});
+
+
+//=====================================================
+// 縮時錄影 啟動及停止
+// IPCAM ON or OFF , POS=0000,0906,0907,0908,0909 選哪支, STU=0001，0004，0006，0008 多久觸發一次
+//=====================================================
+ipcamlist = ["C906","C907","C908","C909"];
+
+router.get('/IPCAMVIDEO',function(req,res,next){	
+	console.log(req.query);	
+	let cmd = req.query.Action
+	let uuid = req.query.UUID
+	let pos = req.query.POS
+	let group = Number(req.query.GROUP)
+	let cstu = req.query.STU
+	
+	//console.log("API cmd ="+cmd+" uuid="+uuid+" pos="+pos+" group="+group);
+	//apipamcheck(res,cmd,uuid,pos,group,cstu,()=>{
+	vcmdapipamcheck(res,cmd,uuid,pos,group,cstu,()=>{
+		
+		jobj = {  "success" : "true"  }; 
+		res.json(jobj);		
+		console.log("IPCAM set start = "+pos);
+		
+		switch(cmd){//sch subcmd 
+			case "ON"://start video recode and stop OPWAVE auto flag
+				switch(pos){
+					case "C906":
+						camontime = cstu.substr(0,4);
+						pdbuffer.jautocmd.DEVLIST.IPCAMC906.TIMER.ON = camontime;
+						
+						pdbuffer.jautocmd.DEVLIST.IPCAMC906.STATU=1;
+						autocmd.load_autojob("IPCAMC906",pdbuffer.jautocmd.DEVLIST.IPCAMC906);
+						
+						pdbuffer.jautocmd.DEVLIST.OPWAVE.STATU = 0;
+						if("OPWAVE" in autocmd.sch_autojob)autocmd.sch_autojob.OPWAVE.STATU=0;
+						
+						//console.log("C906 IPCAM set start "+ JSON.stringify(pdbuffer.jautocmd.DEVLIST.IPCAMC906) );	
+						break;
+					case "C907":
+						camontime = cstu.substr(0,4);
+						pdbuffer.jautocmd.DEVLIST.IPCAMC907.TIMER.ON = camontime;
+						
+						pdbuffer.jautocmd.DEVLIST.IPCAMC907.STATU=1;
+						autocmd.load_autojob("IPCAMC907",pdbuffer.jautocmd.DEVLIST.IPCAMC907);
+						
+						pdbuffer.jautocmd.DEVLIST.OPWAVE.STATU = 0;
+						if("OPWAVE" in autocmd.sch_autojob)autocmd.sch_autojob.OPWAVE.STATU=0;
+						
+						//console.log("C907 IPCAM set start "+ JSON.stringify(pdbuffer.jautocmd.DEVLIST.IPCAMC907) );	
+						break;
+					case "C908":
+						camontime = cstu.substr(0,4);
+						pdbuffer.jautocmd.DEVLIST.IPCAMC908.TIMER.ON = camontime;
+						
+						pdbuffer.jautocmd.DEVLIST.IPCAMC908.STATU=1;
+						autocmd.load_autojob("IPCAMC908",pdbuffer.jautocmd.DEVLIST.IPCAMC908);
+
+						pdbuffer.jautocmd.DEVLIST.OPWAVE.STATU = 0;
+						if("OPWAVE" in autocmd.sch_autojob)autocmd.sch_autojob.OPWAVE.STATU=0;
+						
+						//console.log("C908 IPCAM set start "+ JSON.stringify(pdbuffer.jautocmd.DEVLIST.IPCAMC908) );	
+						break;
+					case "C909":
+						camontime = cstu.substr(0,4);
+						pdbuffer.jautocmd.DEVLIST.IPCAMC909.TIMER.ON = camontime;
+						
+						pdbuffer.jautocmd.DEVLIST.IPCAMC909.STATU=1;
+						autocmd.load_autojob("IPCAMC909",pdbuffer.jautocmd.DEVLIST.IPCAMC909);
+
+						pdbuffer.jautocmd.DEVLIST.OPWAVE.STATU = 0;
+						if("OPWAVE" in autocmd.sch_autojob)autocmd.sch_autojob.OPWAVE.STATU=0;
+						
+						//console.log("C909 IPCAM set start "+ JSON.stringify(pdbuffer.jautocmd.DEVLIST.IPCAMC909) );	
+						break;
+					default:
+						return;
+				}				
+				pdbuffer.jautocmd_update(()=>{
+					console.log("JAUTO Save ok !");						
+					autocmd.autoeventcall('sensorcheck_event'); 
+				});
+				
+				break;
+			case "OFF"://stop video recode and stop OPWAVE auto flag
+				switch(pos){
+					case "C906":
+						pdbuffer.jautocmd.DEVLIST.IPCAMC906.STATU = 0;			
+						if("IPCAMC906" in autocmd.sch_autojob)autocmd.sch_autojob.IPCAMC906.STATU=0;						
+						if( autocmd.sch_autojob.IPCAMC906.stid != null)clearTimeout( autocmd.sch_autojob.IPCAMC906.stid);//clear  on/off command
+						
+						democtiveurl = "http://192.168.5.220/Query/TimeLams.php?UUID="+pdbuffer.setuuid+"&IPCAM=C906&Statu=0"
+						console.log(">>ipc tm demo mode send to =>"+democtiveurl);
+						client.get(democtiveurl, function (data, response) {
+							console.log("demo C906 client active  ok ...");
+						}).on("error", function(err) {console.log("err for client");});	
+						
+						break;
+						
+					case "C907":
+						pdbuffer.jautocmd.DEVLIST.IPCAMC907.STATU = 0;
+						if("IPCAMC907" in autocmd.sch_autojob)autocmd.sch_autojob.IPCAMC907.STATU=0;						
+						if( autocmd.sch_autojob.IPCAMC907.stid != null)clearTimeout(autocmd.sch_autojob.IPCAMC907.stid);//clear  on/off command 
+						
+						democtiveurl = "http://192.168.5.220/Query/TimeLams.php?UUID="+pdbuffer.setuuid+"&IPCAM=C907&Statu=0"
+						console.log(">>ipc tm demo mode send to =>"+democtiveurl);
+						client.get(democtiveurl, function (data, response) {
+							console.log("demo C907 client active  ok ...");
+						}).on("error", function(err) {console.log("err for client");});	
+						break;
+						
+					case "C908":
+						pdbuffer.jautocmd.DEVLIST.IPCAMC908.STATU = 0;
+						if("IPCAMC908" in autocmd.sch_autojob)autocmd.sch_autojob.IPCAMC908.STATU=0;
+						if( autocmd.sch_autojob.IPCAMC908.stid != null)clearTimeout( autocmd.sch_autojob.IPCAMC908.stid);//clear  on/off command 
+						
+						democtiveurl = "http://192.168.5.220/Query/TimeLams.php?UUID="+pdbuffer.setuuid+"&IPCAM=C908&Statu=0"
+						console.log(">>ipc tm demo mode send to =>"+democtiveurl);
+						client.get(democtiveurl, function (data, response) {
+							console.log("demo C908 client active  ok ...");
+						}).on("error", function(err) {console.log("err for client");});	
+						break;
+						
+					case "C909":
+						pdbuffer.jautocmd.DEVLIST.IPCAMC909.STATU = 0;
+						if("IPCAMC909" in autocmd.sch_autojob)autocmd.sch_autojob.IPCAMC909.STATU=0;
+						if( autocmd.sch_autojob.IPCAMC909.stid != null)clearTimeout( autocmd.sch_autojob.IPCAMC909.stid);//clear  on/off command 
+						
+						democtiveurl = "http://192.168.5.220/Query/TimeLams.php?UUID="+pdbuffer.setuuid+"&IPCAM=C909&Statu=0"
+						console.log(">>ipc tm demo mode send to =>"+democtiveurl);
+						client.get(democtiveurl, function (data, response) {
+							console.log("demo C909 client active  ok ...");
+						}).on("error", function(err) {console.log("err for client");});	
+						break;
+					default:
+						return;
+				}		
+				if( (pdbuffer.jautocmd.DEVLIST.IPCAMC906.STATU == 00)&&(pdbuffer.jautocmd.DEVLIST.IPCAMC907.STATU == 00)&&
+					(pdbuffer.jautocmd.DEVLIST.IPCAMC908.STATU == 00)&&(pdbuffer.jautocmd.DEVLIST.IPCAMC909.STATU == 00)){
+					//start opwave funciton 
+					pdbuffer.jautocmd.DEVLIST.OPWAVE.STATU = 1;
+					if("OPWAVE" in autocmd.sch_autojob)autocmd.sch_autojob.OPWAVE.STATU=1;
+				}
+				pdbuffer.jautocmd_update(()=>{
+					console.log("JAUTO Save ok !");					
+					autocmd.autoeventcall('sensorcheck_event'); 
+								
+				});
+				break;
+			default:
+				console.log(cregadd+" not define =>"+cmd);	
+				return;
+		}	
+				
+	});	
+});
+
+
+/* 
 router.get('/PDMACDEV',function(req,res,next){	
 	console.log(req.query);	
 	let cmd = req.query.Action
@@ -1268,7 +1107,7 @@ router.get('/EVENTID',function(req,res,next){
 				
 	});	
 });
-
+ */
 
 regcmdchkloop();
 

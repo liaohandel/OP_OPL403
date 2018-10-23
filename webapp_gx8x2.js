@@ -1,4 +1,4 @@
-console.log("[linkgateway ] start opf403 webapp_gx8x2 20180802x1 ...");
+console.log("[linkgateway ] start opf403 webapp_gx8x2 2011009x1 ...");
 
 var EventEmitter = require('events').EventEmitter; 
 var event = new EventEmitter(); 
@@ -29,6 +29,8 @@ var os = require('os');
 
 var util = require('util');
 var exec = require('child_process').exec; 
+var spawn = require('child_process').spawn;
+
 //var start_cmdStr = 'sudo pm2 start /home/pi/opcom_prj/gotest6_opf402/ipcamssh8022set';
 //var stop_cmdStr = 'sudo pm2 delete /home/pi/opcom_prj/gotest6_opf402/ipcamssh8022set';
 var start_cmdStr = "sudo sh /home/pi/opcom_prj/gotest5_opf403/getsshx5.sh";
@@ -96,32 +98,95 @@ var setdevouturl = devloadurl+"?UUID="+setuuid+"&result="+"{}"
 //["CA03","CA04","CA05","C105","C106"],	//7
 var sbcount = 0;
 var sensorbuff = [
-	["H001"],["H002"],["H003"],["H004"],["H005"],["K001"]	//0,1
+	["H001"],["H004"],["H003"],["H004"],["H005"],["H006"],["E002"]	//0,1
 ]
 
 var regsensorbuff = [
 	[
-		{"POS":"H001","CMD":"RH","STU":"920000","Type":"AirRH"},
-		{"POS":"H002","CMD":"RH","STU":"920000","Type":"AirRH"},
-		{"POS":"H003","CMD":"RH","STU":"920000","Type":"AirRH"},
-		{"POS":"H004","CMD":"RH","STU":"920000","Type":"AirRH"},
-		{"POS":"H005","CMD":"RH","STU":"920000","Type":"AirRH"}
+		{"POS":"H001","CMD":"TEMPERATURE","STU":"A10000","Type":"AirTemp","typecmd":"C77","typereg":"A1"},
+		{"POS":"H002","CMD":"TEMPERATURE","STU":"A10000","Type":"AirTemp","typecmd":"C77","typereg":"A1"},
+		{"POS":"H003","CMD":"TEMPERATURE","STU":"A10000","Type":"AirTemp","typecmd":"C77","typereg":"A1"},
+		{"POS":"H004","CMD":"TEMPERATURE","STU":"A10000","Type":"AirTemp","typecmd":"C77","typereg":"A1"},
+		{"POS":"H005","CMD":"TEMPERATURE","STU":"A10000","Type":"AirTemp","typecmd":"C77","typereg":"A1"},
+		{"POS":"H006","CMD":"TEMPERATURE","STU":"A10000","Type":"AirTemp","typecmd":"C77","typereg":"A1"},
+		{"POS":"E002","CMD":"TEMPERATURE","STU":"A10000","Type":"AirTemp","typecmd":"C77","typereg":"A1"}
 	],
 	[
-		{"POS":"H001","CMD":"TEMPERATURE","STU":"A10000","Type":"AirTemp"},
-		{"POS":"H002","CMD":"TEMPERATURE","STU":"A10000","Type":"AirTemp"},
-		{"POS":"H003","CMD":"TEMPERATURE","STU":"A10000","Type":"AirTemp"},
-		{"POS":"H004","CMD":"TEMPERATURE","STU":"A10000","Type":"AirTemp"},
-		{"POS":"H005","CMD":"TEMPERATURE","STU":"A10000","Type":"AirTemp"}
+		{"POS":"E002","CMD":"WATERLEVEL","STU":"710000","Type":"WATERLEVEL1","typecmd":"C79","typereg":"71"},
+		{"POS":"E002","CMD":"WATERLEVEL","STU":"720000","Type":"WATERLEVEL2","typecmd":"C79","typereg":"72"},
+		{"POS":"E002","CMD":"WATERLEVEL","STU":"740000","Type":"WATERLEVEL3","typecmd":"C79","typereg":"74"},
+		{"POS":"E002","CMD":"WATERLEVEL","STU":"750000","Type":"WATERLEVEL4","typecmd":"C79","typereg":"75"},
+		{"POS":"E002","CMD":"WATERLEVEL","STU":"730000","Type":"WATERLEVEL5","typecmd":"C79","typereg":"73"},
+		{"POS":"E002","CMD":"WATERLEVEL","STU":"760000","Type":"WATERLEVEL6","typecmd":"C79","typereg":"76"},
+		{"POS":"E002","CMD":"WATERLEVEL","STU":"770000","Type":"WATERLEVEL7","typecmd":"C79","typereg":"77"}
 	],
 	[
-		{"POS":"H001","CMD":"CO2","STU":"910000","Type":"CO2"},
-		{"POS":"H002","CMD":"CO2","STU":"910000","Type":"CO2"},
-		{"POS":"H003","CMD":"CO2","STU":"910000","Type":"CO2"},
-		{"POS":"H004","CMD":"CO2","STU":"910000","Type":"CO2"},
-		{"POS":"H005","CMD":"CO2","STU":"910000","Type":"CO2"}
+		{"POS":"H001","CMD":"RH","STU":"920000","Type":"AirRH","typecmd":"C78","typereg":"92"},
+		{"POS":"H003","CMD":"TEMPERATURE","STU":"A10000","Type":"AirTemp","typecmd":"C77","typereg":"A1"},
+		{"POS":"H002","CMD":"RH","STU":"920000","Type":"AirRH","typecmd":"C78","typereg":"92"},
+		{"POS":"H003","CMD":"RH","STU":"920000","Type":"AirRH","typecmd":"C78","typereg":"92"},
+		{"POS":"H004","CMD":"RH","STU":"920000","Type":"AirRH","typecmd":"C78","typereg":"92"},
+		{"POS":"H005","CMD":"RH","STU":"920000","Type":"AirRH","typecmd":"C78","typereg":"92"},
+		{"POS":"H006","CMD":"RH","STU":"920000","Type":"AirRH","typecmd":"C78","typereg":"92"},
+		{"POS":"E002","CMD":"RH","STU":"920000","Type":"AirRH","typecmd":"C78","typereg":"92"}
+	],
+	[
+		{"POS":"H001","CMD":"CO2","STU":"910000","Type":"CO2","typecmd":"C76","typereg":"91"},
+		{"POS":"H004","CMD":"TEMPERATURE","STU":"A10000","Type":"AirTemp","typecmd":"C77","typereg":"A1"},
+		{"POS":"H002","CMD":"CO2","STU":"910000","Type":"CO2","typecmd":"C76","typereg":"91"},
+		{"POS":"H003","CMD":"CO2","STU":"910000","Type":"CO2","typecmd":"C76","typereg":"91"},
+		{"POS":"H004","CMD":"CO2","STU":"910000","Type":"CO2","typecmd":"C76","typereg":"91"},
+		{"POS":"H005","CMD":"CO2","STU":"910000","Type":"CO2","typecmd":"C76","typereg":"91"},
+		{"POS":"H006","CMD":"CO2","STU":"910000","Type":"CO2","typecmd":"C76","typereg":"91"},
+		{"POS":"E002","CMD":"CO2","STU":"910000","Type":"CO2","typecmd":"C76","typereg":"91"}
 	]
 ]
+
+var uploadregsensorbuff = [
+	[
+		{"POS":"H001","CMD":"CO2","STU":"910000","Type":"CO2","typecmd":"C76","typereg":"91"},
+		{"POS":"H002","CMD":"TEMPERATURE","STU":"A10000","Type":"AirTemp","typecmd":"C77","typereg":"A1"},
+		{"POS":"H002","CMD":"CO2","STU":"910000","Type":"CO2","typecmd":"C76","typereg":"91"},
+		{"POS":"H003","CMD":"CO2","STU":"910000","Type":"CO2","typecmd":"C76","typereg":"91"},
+		{"POS":"H004","CMD":"CO2","STU":"910000","Type":"CO2","typecmd":"C76","typereg":"91"},
+		{"POS":"H005","CMD":"CO2","STU":"910000","Type":"CO2","typecmd":"C76","typereg":"91"},
+		{"POS":"H006","CMD":"CO2","STU":"910000","Type":"CO2","typecmd":"C76","typereg":"91"},
+		{"POS":"E002","CMD":"CO2","STU":"910000","Type":"CO2","typecmd":"C76","typereg":"91"}
+	],
+	[
+		{"POS":"H001","CMD":"TEMPERATURE","STU":"A10000","Type":"AirTemp","typecmd":"C77","typereg":"A1"},
+		{"POS":"H002","CMD":"TEMPERATURE","STU":"A10000","Type":"AirTemp","typecmd":"C77","typereg":"A1"},
+		{"POS":"H003","CMD":"TEMPERATURE","STU":"A10000","Type":"AirTemp","typecmd":"C77","typereg":"A1"},
+		{"POS":"H004","CMD":"TEMPERATURE","STU":"A10000","Type":"AirTemp","typecmd":"C77","typereg":"A1"},
+		{"POS":"H005","CMD":"TEMPERATURE","STU":"A10000","Type":"AirTemp","typecmd":"C77","typereg":"A1"},
+		{"POS":"H006","CMD":"TEMPERATURE","STU":"A10000","Type":"AirTemp","typecmd":"C77","typereg":"A1"},
+		{"POS":"E002","CMD":"TEMPERATURE","STU":"A10000","Type":"AirTemp","typecmd":"C77","typereg":"A1"}
+	],
+	[
+		{"POS":"E002","CMD":"WATERLEVEL","STU":"710000","Type":"WATERLEVEL1","typecmd":"C79","typereg":"71"},
+		{"POS":"H002","CMD":"TEMPERATURE","STU":"A10000","Type":"AirTemp","typecmd":"C77","typereg":"A1"},
+		{"POS":"E002","CMD":"WATERLEVEL","STU":"720000","Type":"WATERLEVEL2","typecmd":"C79","typereg":"72"},
+		{"POS":"E002","CMD":"WATERLEVEL","STU":"740000","Type":"WATERLEVEL3","typecmd":"C79","typereg":"74"},
+		{"POS":"E002","CMD":"WATERLEVEL","STU":"750000","Type":"WATERLEVEL4","typecmd":"C79","typereg":"75"},
+		{"POS":"E002","CMD":"WATERLEVEL","STU":"730000","Type":"WATERLEVEL5","typecmd":"C79","typereg":"73"},
+		{"POS":"E002","CMD":"WATERLEVEL","STU":"760000","Type":"WATERLEVEL6","typecmd":"C79","typereg":"76"},
+		{"POS":"E002","CMD":"WATERLEVEL","STU":"770000","Type":"WATERLEVEL7","typecmd":"C79","typereg":"77"}
+	],
+	[
+		{"POS":"H001","CMD":"RH","STU":"920000","Type":"AirRH","typecmd":"C78","typereg":"92"},
+		{"POS":"H002","CMD":"TEMPERATURE","STU":"A10000","Type":"AirTemp","typecmd":"C77","typereg":"A1"},
+		{"POS":"H002","CMD":"RH","STU":"920000","Type":"AirRH","typecmd":"C78","typereg":"92"},
+		{"POS":"H003","CMD":"RH","STU":"920000","Type":"AirRH","typecmd":"C78","typereg":"92"},
+		{"POS":"H004","CMD":"RH","STU":"920000","Type":"AirRH","typecmd":"C78","typereg":"92"},
+		{"POS":"H005","CMD":"RH","STU":"920000","Type":"AirRH","typecmd":"C78","typereg":"92"},
+		{"POS":"H006","CMD":"RH","STU":"920000","Type":"AirRH","typecmd":"C78","typereg":"92"},
+		{"POS":"E002","CMD":"RH","STU":"920000","Type":"AirRH","typecmd":"C78","typereg":"92"},
+		{"POS":"E002","CMD":"PH","STU":"930000","Type":"PH","typecmd":"C7B","typereg":"93"},
+		{"POS":"E002","CMD":"ELECTRONS","STU":"940000","Type":"ELECTRONS","typecmd":"C7A","typereg":"94"}
+	]
+]
+
+
 
 //var sbcountmax =13;
 var sbcountmax = regsensorbuff.length;
@@ -173,8 +238,6 @@ var cmdtab={
 	"C7E":"AUTO"
 }
 
-
-
 //=========================================================
 var sensorcmdtab={
 	"C76":"CO2",
@@ -185,33 +248,34 @@ var sensorcmdtab={
 	"C7B":"PH"
 }
 
-
-
 // ==== opf403 container tree type REG channel device stu load and upload =====
 
 function  opf403_regdev_apiloadscan(regpos){//poslist ,api call LOAD save to buffer load sensor value save to buffer  
-	console.log("### sensor device load to PDDATA buffer ..."+JSON.stringify(regpos));
-	let llpos={}
+	//console.log("### sensor device by pos api load to PDDATA buffer ..."+JSON.stringify(regpos));
+	
 	if(regpos.length > 0){
 		for(rr in regpos){
 			if(!(regpos[rr].POS in pdbuffer.pdjobj.PDDATA.Devtab))continue;
-			
 			devloadurl = "http://127.0.0.1:3000/"+regpos[rr].CMD+"?UUID="+pdbuffer.setuuid+"&Action=LOAD"+"&POS="+regpos[rr].POS+"&STU="+regpos[rr].STU+"&GROUP=0000"
+			//console.log("loadscan api ="+devloadurl);
 			client.get(devloadurl, function (data, response) {
-				console.log("apiuel: load ok...");
+				console.log("apiurl: load ok...");
 			}).on("error", function(err) {console.log("err for client");});
 		}
 	}
 }
 
-function  opf403_regdev_loadscan(regpos){//poslist ,direct buffer LOAD save to buffer load sensor value save to buffer  
-	console.log("### sensor device load to PDDATA buffer ..."+JSON.stringify(regpos));		
+function  opf403_regdev_loadscan(regpos){ //poslist ,direct buffer LOAD save to buffer load sensor value save to buffer  
+	//console.log("### sensor device by ipadd load to PDDATA buffer ..."+JSON.stringify(regpos));		
 	let ttbuf = ""	
 	let llpos={}
 	let cregadd = 0x91;
 	if(regpos.length > 0){
+		
 		for(rr in regpos){
 			if(!(regpos[rr].POS in pdbuffer.pdjobj.PDDATA.Devtab))continue;//undefine pos is pass
+			pdbuffer.pdjobj.PDDATA.Devtab[regpos[rr].POS][regpos[rr].typecmd].chtab[regpos[rr].typereg].stu=0;
+			//pdbuffer.pdjobj.PDDATA.Devtab.H001.C77.chtab["A1"].stu=0;
 			
 			cregadd = regpos[rr].STU.substr(0,2)//[0][1] 2 byte
 			ttbuf = Buffer.from(cmdcode.rs485v050.sb0cmd,'hex'); //"[0][1:add][2:len][3][4:cmd][5:REG][6,7:stu][8,9:groud][10]"f5 00 06 00 02 20 12 34 12 34 20"
@@ -240,45 +304,15 @@ var regcmdtab={
 }
 
 function opf403_regstulinkweb(regdevarr){
-	console.log("### sensor link upload web DB..."+JSON.stringify(regdevarr));
+	//console.log("### sensor link upload web DB..."+JSON.stringify(regdevarr));
 	//[sensor位置回報]  http://tscloud.opcom.com/Cloud/API/v2/SensorStatus?
     //ID={UUID}& POS={POS}&  Type={AirTemp,AirRH,EC,PH,CO2,WaterTemp,WaterLevel}& value={value}	
 	let jjpos={};
-	let regcmdcode="";
-	let cregadd = 0x91;
+	let regcmdcode="C76";
+	let cregadd = "91";
 	let regval = 0;
 	let outregval=0;
-	if(regdevarr.length > 0){
-		for(rr in regdevarr){
-			if(!(regdevarr[rr].POS in pdbuffer.pdjobj.PDDATA.Devtab))continue;//undefine pos is pass
-			jjpos=pdbuffer.pdjobj.PDDATA.Devtab[regdevarr[rr].POS];
-			if(!(regdevarr[rr].CMD in regcmdtab ))continue;//undefine is pass			
-			regcmdcode = regcmdtab[regdevarr[rr].CMD]
-			if(!(regcmdcode in jjpos ))continue;//undefine is pass	
-			cregadd = regdevarr[rr].STU.substr(0,2)//[0][1] 2 byte
-			if(!(cregadd in jjpos[regcmdcode]["chtab"]))continue;//undefine is pass	
-			regval = jjpos[regcmdcode]["chtab"][cregadd]["stu"]
-			outregval=regval
-			//if(regdevarr[rr].CMD=="RH")outregval=(regval/10)
-			//if(regdevarr[rr].CMD=="TEMPERATURE")outregval=(regval/10)
-			regsensor_url = pdbuffer.pdjobj.PDDATA.v2sensorstatusurl+"?ID="+pdbuffer.setuuid+"&POS="+regdevarr[rr].POS+"&Type="+regdevarr[rr].CMD+"&value="+outregval
-			console.log(">>web "+regsensor_url);
-			client.get(regsensor_url,cargs, function (data, response) {
-				console.log("sensor uplaod url: load ok...");
-			}).on("error", function(err) {console.log("err for client");}).on('requestTimeout', function (req) {req.abort();});
-		}		
-	}	
-}
-
-
-function opf403_regstulinkweb220(regdevarr){
-	console.log("### sensor link upload web DB..."+JSON.stringify(regdevarr));
-	//[sensor位置回報]  http://tscloud.opcom.com/Cloud/API/v2/SensorStatus?
-    //ID={UUID}& POS={POS}&  Type={AirTemp,AirRH,EC,PH,CO2,WaterTemp,WaterLevel}& value={value}	
-	let jjpos={};
-	let regcmdcode="";
-	let cregadd = 0x91;
-	let regval = 0;
+	let typemask =""
 	if(regdevarr.length > 0){
 		for(rr in regdevarr){
 			if(!(regdevarr[rr].POS in pdbuffer.pdjobj.PDDATA.Devtab))continue;//undefine pos is pass
@@ -289,15 +323,64 @@ function opf403_regstulinkweb220(regdevarr){
 			cregadd = regdevarr[rr].STU.substr(0,2)//[0][1] 2 byte
 			if(!(cregadd in jjpos[regcmdcode]["chtab"]))continue;//undefine is pass	
 			regval = jjpos[regcmdcode]["chtab"][cregadd].stu
-			regsensor_url = ipcsensorupdateurl +"ID="+pdbuffer.setuuid+"&POS="+regdevarr[rr].POS+"&Type="+regdevarr[rr].CMD+"&value="+regval
-			console.log(">>web "+regsensor_url);
+			
+			if(regval >=5000)continue;//err valu too big
+			outregval=regval;
+			
+			typemask = regdevarr[rr].CMD
+			if(regdevarr[rr].CMD == "WATERLEVEL"){
+				typemask = regdevarr[rr].Type;
+				outregval=Math.ceil((regval/5)); // water level 1..20 => 1..5
+				if(outregval<=0)outregval=1;
+			}
+			regsensor_url = pdbuffer.pdjobj.PDDATA.v2sensorstatusurl+"?ID="+pdbuffer.setuuid+"&POS="+regdevarr[rr].POS+"&Type="+typemask+"&value="+outregval
+			//console.log(">>web "+regsensor_url);
 			client.get(regsensor_url,cargs, function (data, response) {
-				console.log("sensor uplaod url: load ok...");
+				//console.log("sensor uplaod url: load ok...");
 			}).on("error", function(err) {console.log("err for client");}).on('requestTimeout', function (req) {req.abort();});
 		}		
 	}	
 }
 
+function opf403_regstulinkweb220(regdevarr){
+	//console.log("### sensor link upload web DB..."+JSON.stringify(regdevarr));
+	//[sensor位置回報]  http://tscloud.opcom.com/Cloud/API/v2/SensorStatus?
+    //ID={UUID}& POS={POS}&  Type={AirTemp,AirRH,EC,PH,CO2,WaterTemp,WaterLevel}& value={value}	
+	let jjpos={};
+	let regcmdcode="";
+	let cregadd = 0x91;
+	let regval = 0;
+	let typemask =""
+	if(regdevarr.length > 0){
+		for(rr in regdevarr){
+			if(!(regdevarr[rr].POS in pdbuffer.pdjobj.PDDATA.Devtab))continue;//undefine pos is pass
+			jjpos=pdbuffer.pdjobj.PDDATA.Devtab[regdevarr[rr].POS];
+			if(!(regdevarr[rr].CMD in regcmdtab ))continue;//undefine is pass			
+			regcmdcode = regcmdtab[regdevarr[rr].CMD]
+			if(!(regcmdcode in jjpos ))continue;//undefine is pass	
+			cregadd = regdevarr[rr].STU.substr(0,2)//[0][1] 2 byte
+			if(!(cregadd in jjpos[regcmdcode]["chtab"]))continue;//undefine is pass	
+			regval = jjpos[regcmdcode]["chtab"][cregadd].stu
+			
+			if(regval >=5000)continue;//err valu too big			
+			outregval=regval
+			
+			typemask = regdevarr[rr].CMD
+			if(regdevarr[rr].CMD == "WATERLEVEL"){
+				typemask = regdevarr[rr].Type;
+				//outregval=Math.round((regval/5)); // water level 1..20 => 1..5
+				outregval=Math.ceil((regval/5)); // water level 1..20 => 1..5
+				if(outregval<=0)outregval=1;
+			}
+			
+			regsensor_url = ipcsensorupdateurl +"ID="+pdbuffer.setuuid+"&POS="+regdevarr[rr].POS+"&Type="+typemask+"&value="+outregval
+			//console.log(">>web "+regsensor_url);
+			client.get(regsensor_url,cargs, function (data, response) {
+				//console.log("sensor uplaod url: load ok...");
+			}).on("error", function(err) {console.log("err for client");}).on('requestTimeout', function (req) {req.abort();});
+		}		
+	}	
+}
 
 //=== /DeviceList return to Restful API ===
 // app.get('/DeviceList', function (req, res) {	
@@ -358,7 +441,7 @@ function ondevposbuff(spos,callback){//###
 	if((spos in pdbuffer.pdjobj.PDDATA.Devtab)== false)callback(jload);
 	//jpos={"POSTab":spos,"group":"0"}
 	console.log("sop="+spos)
-	jdev={"CMD":0,"sub":0,"stu":0,"Data":0}
+	jdev={"CMD":0,"sub":0,"stu":0,"Data":0,"chtab":0};
 	for(scmd in  pdbuffer.pdjobj.PDDATA.Devtab[spos]){
 		if(scmd != "STATU"){			
 			vkey = cmdcode.apicmdtype[scmd]
@@ -366,6 +449,7 @@ function ondevposbuff(spos,callback){//###
 			jdev.sub = pdbuffer.pdjobj.PDDATA.Devtab[spos][scmd].sub
 			jdev.stu = pdbuffer.pdjobj.PDDATA.Devtab[spos][scmd].stu
 			jdev.Data = pdbuffer.pdjobj.PDDATA.Devtab[spos][scmd].Data
+			jdev.chtab = pdbuffer.pdjobj.PDDATA.Devtab[spos][scmd].chtab
 			//console.log("key="+vkey)
 			//console.log("data="+ pdjobj.PDDATA.Devtab[spos][scmd].sub)
 			jload.push(jobjcopy(jdev));
@@ -454,22 +538,24 @@ app.get('/loadcheck', function (req, res) {  //sensor device load scan to PDDATA
     console.log(req.query.pin);
     res.send("ready");
 	
-	
-	autocmd.autoeventcall('sensorcheck_event'); //cechk auto scan 
+	// autocmd.autoeventcall('sec30status_event'); // run water check loop 			
+	// autocmd.autoeventcall('sensorcheck_event'); //cechk auto scan 
+	// autocmd.autoeventcall('alarmcheck_event'); //cechk alarm scan 
 	
 	sbcount++;
-	if(sbcount>=sbcountmax)sbcount=0;		
+	if(sbcount>=sbcountmax)sbcount=0;	
+	console.log("scan load max="+sbcountmax+" count="+sbcount);	
 	opf403_regdev_loadscan(regsensorbuff[sbcount]);
-	
 });
 
 app.get('/typecheck', function (req, res) { //sensor PDDATA buffer upload to web DB test ! 
     res.send("ready web typwchk");		
 	console.log(">>LOCAL server 192.268.5.220 Link Mode !");	
+	
 	sbcount++;
 	if(sbcount>=sbcountmax)sbcount=0;				
-	opf403_regstulinkweb(regsensorbuff[sbcount]);
-	opf403_regstulinkweb220(regsensorbuff[sbcount]);
+	opf403_regstulinkweb(uploadregsensorbuff[sbcount]);
+	opf403_regstulinkweb220(uploadregsensorbuff[sbcount]);
 	
 });
 
@@ -657,6 +743,97 @@ app.get('/PDINFO', function (req, res) {
 	res.json(jobj);
 });
 
+
+
+//==============================================
+// time setup by "ON" : auto ip check or "SET" by command setup ### 20180908 
+//==============================================
+
+function set_city_time(timecity){
+	//let setiptime = spawn('sudo timedatectl',['set-timezone',timecity]);
+	setiptime = exec('sudo timedatectl set-timezone '+timecity);
+}
+
+function setnet_local_iptime(){
+	var getextip = spawn('curl', ['ifconfig.me']);
+	var extip ="0.0.0.0";
+	//console.log("ls ="+ JSON.stringify(ls) );
+	//$Sudo timedatectl set-timezone "Asia/Taipei" or "America/New_York"
+	//console.log(">>ip =" + extip.toString() );220.128.178.162 ==> continent_name / region_name /city
+
+	getextip.stdout.on('data', (data) => {
+		console.log(`Ext ip :\n${data}`);
+		pdbuffer.jautocmd.DEVICESET.SETTIMEPAM.EXTIP=data.toString();
+		
+		loadtimurl = "http://api.ipstack.com/"+data+"?access_key=40360816b87da44ef6f59d714aff4a63&format=1&fields=continent_name,city"
+		
+		client.get(loadtimurl, function (data, response) {
+			//console.log("get time json ok... >>"+JSON.stringify(data));
+			//ttjdata = jobjcopy(data);
+			//ttcode = ttjdata.continent_name+"/"+ttjdata.region_name
+			ttcode = '"'+data.continent_name+"/"+data.city+'"'
+			console.log("time areg ="+ttcode);
+			pdbuffer.jautocmd.DEVICESET.SETTIMEPAM.LOCALCITY = ttcode;
+			//let setiptime = spawn('sudo timedatectl',['set-timezone',ttcode]);
+			
+			pdbuffer.jautocmd_update(()=>{
+				console.log("JAUTO Save ok !");									
+			});
+			
+			//setiptime = exec('sudo timedatectl set-timezone '+ttcode);
+			set_city_time(ttcode);
+			
+			//setiptime.stdout.on('data', (data) => {
+			//	console.log(`setup wait :\n${data}`);
+			//});
+			
+		}).on("error", function(err) {console.log("err for client");});
+		
+	});
+}
+
+app.get('/SETTIME', function (req, res) {
+	console.log(req.query);	
+	let cmd = req.query.Action
+	let uuid = req.query.UUID
+	let pos = req.query.POS
+	let group = Number('0x'+req.query.GROUP)
+	let cstu = req.query.STU
+	
+	if( (uuid != setuuid) || (typeof(cmd) == "undefined") || (typeof(pos) == "undefined") || (typeof(group) == "undefined")  ){
+		jobj = { "success" : "false" };  
+		console.log(JSON.stringify(jobj));
+		res.json(jobj);
+		return;
+	}
+	jobj = {  "success" : "true" , "UUID" : uuid  }; 
+	//res.json(jobj);
+	
+	//console.log(JSON.stringify(jobj));
+	
+	switch(cmd){
+		case "ON":	//auto load ip and set pdbuffer.jautocmd.DEVICESET.SETTIMEPAM.EXTIP  pdbuffer.jautocmd.DEVICESET.SETTIMEPAM.LOCALCITY
+			res.json(jobj);
+			setnet_local_iptime();// midway system time setup by Local ip 
+			break
+		case "LOAD":
+			jobj = pdbuffer.jautocmd.DEVICESET.SETTIMEPAM;
+			res.json(jobj);
+			break	
+		case "SET":	
+			res.json(jobj);
+			pdbuffer.jautocmd.DEVICESET.SETTIMEPAM.LOCALCITY = cstu;
+			set_city_time(cstu);
+			pdbuffer.jautocmd_update(()=>{
+				console.log("JAUTO Save ok !");									
+			});
+			break	
+		default:
+			return 		
+	}
+});
+
+
 //===============================================
 // DEVTAB Drive API Command 
 //===============================================
@@ -670,8 +847,6 @@ app.use('/TREE', treeRoutes);
 // OFP403 REG API Command  after /REGCMD/cmd (LED,PUMP,AIRFAN,PH,ELECTRONS,RH)
 //===============================================
 app.use('/REGCMD', regcmdRoutes);
-
-
 
 
 app.get('/LED', function (req, res) {
@@ -743,16 +918,28 @@ app.get('/LED', function (req, res) {
 			switch(cmd){
 				case "OFF"://F5 IPaddr 06 00 00 20 00 00 00
 					ttbuf[4]=pdbuffer.pdjobj.subcmd[cmd];	
-					pdbuffer.pdjobj.PDDATA.Devtab[pos][funcode]["chtab"][cregadd].sub=cmdindex;		
-					pdbuffer.pdjobj.PDDATA.Devtab[pos][funcode]["chtab"][cregadd].stu=cstu;				
+					pdbuffer.pdjobj.PDDATA.Devtab[pos][funcode]["chtab"][cregadd].sub= 0  //cmdindex;		
+					pdbuffer.pdjobj.PDDATA.Devtab[pos][funcode]["chtab"][cregadd].stu=cstu;		
+					//pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.LEDDRVSTU = 0;//### auto
 					break
 				case "ON"://F5 IPaddr 06 00 01 20 00 00 00
 					ttbuf[4]=pdbuffer.pdjobj.subcmd[cmd];	
-					pdbuffer.pdjobj.PDDATA.Devtab[pos][funcode]["chtab"][cregadd].sub=cmdindex;		
-					pdbuffer.pdjobj.PDDATA.Devtab[pos][funcode]["chtab"][cregadd].stu=cstu;			
+					pdbuffer.pdjobj.PDDATA.Devtab[pos][funcode]["chtab"][cregadd].sub= 1 //cmdindex;		
+					pdbuffer.pdjobj.PDDATA.Devtab[pos][funcode]["chtab"][cregadd].stu=cstu;	
+					//pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.LEDDRVSTU = 1;//### auto		
 					break
 				case "LOAD":
 					ttbuf[4]=pdbuffer.pdjobj.subcmd[cmd];
+					break	
+				case "SET"://%100= 0x00,%80=0x3B,%50=0x44,%30=0x4A
+					if(pos == "A001")pdbuffer.jautocmd.DEVICESET.GROWLED.ONLEV[0]=cstu;//0x60 by B write led level
+					if(pos == "A002")pdbuffer.jautocmd.DEVICESET.GROWLED.ONLEV[1]=cstu;//0x61 by B red   led level
+					if(pos == "A021")pdbuffer.jautocmd.DEVICESET.GROWLED.ONLEV[2]=cstu;//0x30 by A write led level
+					if(pos == "A022")pdbuffer.jautocmd.DEVICESET.GROWLED.ONLEV[3]=cstu;//0x31 by A red   led level
+					//pdbuffer.jautocmd_update(()=>{
+					//	console.log("JAUTO Save ok !");									
+					//});//update buffer to Files
+					return 	
 					break	
 				default:
 					return 		
@@ -763,6 +950,18 @@ app.get('/LED', function (req, res) {
 				cmdindex = pdbuffer.pdjobj.subcmd[cmd]
 				pdbuffer.pdjobj.PDDATA.Devtab[pos][funcode]["chtab"][cregadd].sub=cmdindex;		
 				pdbuffer.pdjobj.PDDATA.Devtab[pos][funcode]["chtab"][cregadd].stu=cstu;	
+				
+				
+				if(pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.LEDAUTOEN == 1){
+					pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.LEDDRVSTU = cmdindex;//### auto
+				}
+				
+				if(pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.WAIT1>0 && group==0x0a){//check is autotm comm wait=1 and clear this flag
+					pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.WAIT1 =0;
+				}else{
+					pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.RUNMODE = "0000";//### auto		
+				}
+				
 				
 				if(cstu.length < 7){
 					ttbuf = Buffer.from(cmdcode.rs485v050.sb0gcmd,'hex'); //"[0][1:add][2:len][3][4:cmd][5:REG][6,7:stu][8,9:groud][10]"f5 f1 08 00 02 20 12 34 56 78 20"
@@ -789,19 +988,29 @@ app.get('/LED', function (req, res) {
 					ttbuf[12]= group>>8;
 					ttbuf[13]= group&0x00ff;
 				}
+				
 			}else{
 				ttbuf = Buffer.from(cmdcode.rs485v050.sb0gcmd,'hex'); //"[0][1:add][2:len][3][4:cmd][5:REG][6,7:stu][8,9:groud][10]"f5 00 06 00 02 20 12 34 12 34 20"
 					
 				cmdindex = pdbuffer.pdjobj.subcmd[cmd]	
 				pdbuffer.pdjobj.PDDATA.Devtab[pos][funcode]["chtab"][cregadd].sub=cmdindex;		
-				pdbuffer.pdjobj.PDDATA.Devtab[pos][funcode]["chtab"][cregadd].stu=cstu;			
-				ttbuf[4]= cmdindex;
+				pdbuffer.pdjobj.PDDATA.Devtab[pos][funcode]["chtab"][cregadd].stu=cstu;		
 				
+				if(pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.LEDAUTOEN == 1){
+					pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.LEDDRVSTU = cmdindex;//### auto
+				}
+				
+				if(pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.WAIT1>0 && group==0x0a){//check is autotm comm wait=1 and clear this flag
+					pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.WAIT1 =0;
+				}else{
+					pdbuffer.jautocmd.WATERLOOP.autotmloop.CHKLOOP.CHKVALUE.RUNMODE = "0000";//### auto
+				}
+				
+				ttbuf[4]= cmdindex;		
 				ttbuf[5]= Number('0x'+cregadd);//0x21,0x22,0x23
 				
 				ttbuf[6]= nstu>>8;
-				ttbuf[7]= nstu&0x00ff;
-				
+				ttbuf[7]= nstu&0x00ff;		
 				ttbuf[8]= group>>8;
 				ttbuf[9]= group&0x00ff;
 			}
@@ -816,8 +1025,6 @@ app.get('/LED', function (req, res) {
 	});	
 	//res.send('Hello LED!')
 });
-
-
 
 
 //=======================================================
@@ -836,44 +1043,61 @@ app.get('/PUMP', function (req, res) {
 		let funcode  = cmdcode.R485CMDDATA.PUMP[0];
 		if(!(funcode in pdbuffer.pdjobj.PDDATA.Devtab[pos]))return;
 		
-		let cregadd = cstu.substr(0,2)//[0][1] 2 byte
+		let cregadd = cstu.substr(0,2)//[0][1] 1 byte  "9C12345678"[0][1] [2][3][4][5] [6][7][8][9]
 		
-		let	nstu = Number('0x'+cstu.substr(2,4))//[2][3][4][5] 4 byte
+		let	nstu = Number('0x'+cstu.substr(2,4))//[2][3][4][5] 2 byte
+		let nstu2 =0;
+		if(cstu.length >=10)nstu2=Number('0x'+cstu.substr(6,4))//[6][7][8][9] 2 byte
 		let ttbuf = ""
+				
 		if(group==0){
 			//cmdindex = pdbuffer.pdjobj.subcmd[cmd];
+			
 			if(!(cregadd in pdbuffer.pdjobj.PDDATA.Devtab[pos][funcode]["chtab"]))return;
 			//dev active
+			
 			ttbuf = Buffer.from(cmdcode.rs485v050.sb0cmd,'hex'); //"[0][1:add][2:len][3][4:cmd][5:REG][6,7:stu][8,9:groud][10]"f5 00 06 00 02 20 12 34 12 34 20"
-			if(pos in pdbuffer.pdjobj.PDDATA.Devtab){ //check pos is working
+			if(cstu.length >=10)ttbuf = Buffer.from(cmdcode.rs485v050.sb0gcmd,'hex'); //f5 f1 08 00 02 20 12 34 56 78 20
+			
+			if(pos in pdbuffer.pdjobj.PDDATA.Devtab){ //check pos is working 
 			   ttbuf[1]= pdbuffer.pdjobj.PDDATA.Devtab[pos].STATU.devadd;
 			}else{
 			   return;
 			}
-			
+
 			cmdindex = pdbuffer.pdjobj.subcmd[cmd]			
 			ttbuf[4]= cmdindex;
 			ttbuf[5]= Number('0x'+cregadd);
 			ttbuf[6]= nstu>>8;
 			ttbuf[7]= nstu&0x00ff;
+			if(cstu.length >=10){
+				ttbuf[8]= nstu2>>8;
+				ttbuf[9]= nstu2&0x00ff;				
+			}
 			//ttbuf[8]= group>>8;
 			//ttbuf[9]= group&0x00ff;
-			
+				
 			switch(cmd){
 				case "OFF":
 					ttbuf[4]=pdbuffer.pdjobj.subcmd[cmd];	
 					pdbuffer.pdjobj.PDDATA.Devtab[pos][funcode]["chtab"][cregadd].sub=cmdindex;		
 					pdbuffer.pdjobj.PDDATA.Devtab[pos][funcode]["chtab"][cregadd].stu=nstu;	
-			console.log("PUMP >>1>"+cmd);			
+					console.log("PUMP >>1>"+cmd);			
 					break
 				case "ON":
 					ttbuf[4]=pdbuffer.pdjobj.subcmd[cmd];	
 					pdbuffer.pdjobj.PDDATA.Devtab[pos][funcode]["chtab"][cregadd].sub=cmdindex;		
 					pdbuffer.pdjobj.PDDATA.Devtab[pos][funcode]["chtab"][cregadd].stu=nstu;	
-			console.log("PUMP >>2>"+cmd);		
+					console.log("PUMP >>2>"+cmd);		
 					break
 				case "LOAD":
 					ttbuf[4]=pdbuffer.pdjobj.subcmd[cmd];
+					break
+				case "SET":
+					ttbuf[4]=pdbuffer.pdjobj.subcmd[cmd];	
+					//pdbuffer.pdjobj.PDDATA.Devtab[pos][funcode]["chtab"][cregadd].sub=cmdindex;		
+					//pdbuffer.pdjobj.PDDATA.Devtab[pos][funcode]["chtab"][cregadd].stu=nstu;	
+					console.log("PUMP >>4>"+cmd);		
 					break	
 				default:
 					return 		
@@ -952,6 +1176,23 @@ app.get('/AIRFAN', function (req, res) {
 					break
 				case "LOAD":
 					ttbuf[4]=pdbuffer.pdjobj.subcmd[cmd];
+					break	
+				case "SET":			
+					if(nstu == 0 ){
+						if(pos == "B001")pdbuffer.jautocmd.DEVICESET.REFFAN.ONLEV[0]="OFF";//ON ,OFF
+						if(pos == "B002")pdbuffer.jautocmd.DEVICESET.REFFAN.ONLEV[1]="OFF";
+						if(pos == "B003")pdbuffer.jautocmd.DEVICESET.REFFAN.ONLEV[2]="OFF";
+						if(pos == "B004")pdbuffer.jautocmd.DEVICESET.REFFAN.ONLEV[3]="OFF";
+					}else{
+						if(pos == "B001")pdbuffer.jautocmd.DEVICESET.REFFAN.ONLEV[0]="ON";//ON ,OFF
+						if(pos == "B002")pdbuffer.jautocmd.DEVICESET.REFFAN.ONLEV[1]="ON";
+						if(pos == "B003")pdbuffer.jautocmd.DEVICESET.REFFAN.ONLEV[2]="ON";
+						if(pos == "B004")pdbuffer.jautocmd.DEVICESET.REFFAN.ONLEV[3]="ON";
+					}
+					//pdbuffer.jautocmd_update(()=>{
+					//	console.log("JAUTO Save ok !");									
+					//});//update buffer to Files
+					return 
 					break	
 				default:
 					return 		
@@ -1388,6 +1629,12 @@ app.get('/ELECTRONS', function (req, res) {
 			case "LOAD":
 				ttbuf[4]=pdbuffer.pdjobj.subcmd[cmd];
 				break	
+			case "ON"://EC calibration 
+				ttbuf[4]= 0x01;
+				ttbuf[5]= Number('0x'+cregadd);
+				ttbuf[6]= nstu>>8;
+				ttbuf[7]= nstu&0x00ff;				
+				break	
 			default:
 				return 		
 		}
@@ -1440,6 +1687,13 @@ app.get('/PH', function (req, res) {
 		switch(cmd){
 			case "LOAD":
 				ttbuf[4]=pdbuffer.pdjobj.subcmd[cmd];
+				break	
+			case "ON"://PH calibration 
+				//ttbuf[1]= 0x21;
+				ttbuf[4]= 0x01;
+				ttbuf[5]= Number('0x'+cregadd);
+				ttbuf[6]= nstu>>8;
+				ttbuf[7]= nstu&0x00ff;				
 				break	
 			default:
 				return 		
@@ -1557,24 +1811,30 @@ app.get('/PWM', function (req, res) {
 		}
 		//F5 F1 08 00 00 40 00 00 00 group check tx: f5 f1 08 00 00 00 00 00 00 ff 20
 		// 0  1  2  3  4  5  6  7  8                  0  1  2  3  4  5  6  7  8  9  10
-		console.log("4>>"+cmd);
+		//console.log("4>>"+cmd);
 		switch(cmd){
 			case "OFF":
+				//autocmd.runauto_pwmoff();//backup auto status 
+				autocmd.holdkey_pwmoff("KEYPAD0");
+				autocmd.runauto_pwmoff();
+				
 				cmdindex = pdbuffer.pdjobj.subcmd[cmd]			
 				ttbuf[4]= cmdindex;
 				ttbuf[1]= 0xf1  //brocat command 
-				ttbuf[5]= 0x40  //control reg
+				ttbuf[5]= Number('0x'+cregadd); //control reg
 				ttbuf[6]= nstu>>8;
 				ttbuf[7]= nstu&0x00ff;
 				ttbuf[8]= group>>8;
 				ttbuf[9]= group&0x00ff;
-				
 				break	
-			case "ON":
+			case "ON":			
+				autocmd.holdkey_pwmon("KEYPAD0");//key active start 			
+				autocmd.runauto_pwmon();//restart auto loop
+				
 				cmdindex = pdbuffer.pdjobj.subcmd[cmd]			
 				ttbuf[4]= cmdindex;
 				ttbuf[1]= 0xf1  //brocat command 
-				ttbuf[5]= 0x40  //control reg 
+				ttbuf[5]= Number('0x'+cregadd);  //control reg 
 				ttbuf[6]= nstu>>8;
 				ttbuf[7]= nstu&0x00ff;
 				ttbuf[8]= group>>8;
@@ -1584,34 +1844,11 @@ app.get('/PWM', function (req, res) {
 				return 		
 		}
 		
-		console.log("5>>"+cmd);
+		//console.log("5>>"+cmd);
 		pdbuffer.totxbuff(ttbuf);
 		
 	});	
 });
-
-//=====================================================
-app.get('/SETTIME', function (req, res) {
-	console.log(req.query);	
-	let cmd = req.query.Action
-	let uuid = req.query.UUID
-	let pos = req.query.POS
-	let group = Number('0x'+req.query.GROUP)
-	let cstu = req.query.STU
-	
-	if( (uuid != setuuid) || (typeof(cmd) == "undefined") || (typeof(pos) == "undefined") || (typeof(group) == "undefined")  ){
-		jobj = { "success" : "false" };  
-		console.log(JSON.stringify(jobj));
-		res.json(jobj);
-		return;
-	}
-	jobj = {  "success" : "true" , "UUID" : uuid  }; 
-	console.log(JSON.stringify(jobj));
-	res.json(jobj);
-
-
-	
-})
 
 
 //=====================================================
@@ -1640,6 +1877,7 @@ app.get('/AUTO', function (req, res) {
 //Linke gateway Start UP and login DDNS
 //=====================================================
 app.listen(setport, function () {    
+	let chkstr = "";
 	
 	pdbuffer.sysload(function(){
 		ddsnurl = pdbuffer.pdjobj.PDDATA.dsnurl;
@@ -1662,35 +1900,61 @@ app.listen(setport, function () {
 			//console.log("0xfc command check 0..."+global.arxokflag)
 			//console.log("0xfc command check 0..."+global.arxokflag)
 			if(global.arxokflag == true){
+				global.arxokflag=false;
 				console.log("0xfc command check 1..."+global.arxokflag)
 				pdbuffer.eventcall('arxbuff_event'); 
 				//global.arxokflag=false;
-				global.arxokflag=false;
 			}
-		},150);
+		},50);
 
 		//### user callback message event ###
 		setInterval(function(){			
 			//console.log("0xfc command check 2..."+global.rxokflag)
 			//console.log("0xfc command check 2..."+global.rxokflag)
 			if(global.rxokflag == true){
+				global.rxokflag=false;
 				console.log("0xfc command check 3..."+global.rxokflag)
 				pdbuffer.eventcall('rxbuff_event'); 
 				//global.rxokflag=false;
-				global.rxokflag=false;
 			}
-		},160);
+		},50);
 
 		
 		//### user callback message event ###
 		setInterval(function(){			
-			console.log("auto command check 2...");
+			//console.log("auto command check 2...");
 			autocmd.autoeventcall('sensorcheck_event'); 
-		},1 * 60 * 1000);		
+			
+			//autocmd.autoeventcall('sec30status_event'); 
+			//autocmd.autoeventcall('alarmcheck_event'); //cechk auto scan 
+		},1 * 5 * 1000);		
+		
+		//### user ec/ph water loop event ###
+		setInterval(function(){			
+			console.log("ec/ph loop check 3...");
+			autocmd.autoeventcall('sec30status_event'); 
+		},1 * 30 * 1000);		
+		
+		
+		//### user callback message event ###
+		setInterval(function(){			
+			console.log("alarm message check 4...");
+			autocmd.autoeventcall('alarmcheck_event'); //cechk auto scan 
+
+			sbcount++;
+			if(sbcount>=sbcountmax)sbcount=0;	
+			opf403_regdev_loadscan(regsensorbuff[sbcount]); //opf402 use reg level load scan 
+			opf403_regstulinkweb(uploadregsensorbuff[sbcount]);			
+			opf403_regstulinkweb220(uploadregsensorbuff[sbcount]);
+			
+		},1 * 30 * 1000);
 		
 		
 		if(pdbuffer.pdjobj.PDDATA.linkoffmode == 0){//ext web mode
 			ngrok.connect(setport,function (err, url) {
+				if(url === undefined ){
+					url="http://0000";
+				}
 				seturl = url
 				chkurl = seturl+"/connectcheck"
 				console.log("link=>"+seturl)
@@ -1703,25 +1967,27 @@ app.listen(setport, function () {
 					//console.log(response.query);
 					setInterval(function(){
 					  //console.log('test link ...');
-						//chkurl = seturl+"/connectcheck"
-						client.get(chkurl, function (data, response) {                        
-							//console.log("linkchk ...")                        
-							//console.log(data.toString());
-							let chkstr = data.toString();
+						chkurl = seturl+"/connectcheck"
+						console.log("chklink=>"+chkurl);
+						client.get(chkurl, function (data, response) {  
+							if(data == null){
+								chkstr = "null";
+							}else{
+								chkstr = data.toString(); 
+							}	                     
+							console.log("linkchk ... "+chkstr);
 							if(chkstr === "ready"){                       
 								console.log("linkchk ok ...",linkchkcount)
 								linkchkcount=0;
 								
-								
 								//container_stulinkweb(sensorbuff[sbcount]);//#### link load sensor data 
 								//for(ii in sensorbuff[sbcount])typeloadlinkweb(sensorbuff[sbcount][ii]);
 												
-								sbcount++;
-								if(sbcount>=sbcountmax)sbcount=0;	
-								opf403_regdev_loadscan(regsensorbuff[sbcount]);//opf402 use reg level load scan 
-								opf403_regstulinkweb(regsensorbuff[sbcount]);				
-								opf403_regstulinkweb220(regsensorbuff[sbcount]);
-								
+								// sbcount++;
+								// if(sbcount>=sbcountmax)sbcount=0;	
+								// opf403_regdev_loadscan(regsensorbuff[sbcount]);//opf402 use reg level load scan 
+								// opf403_regstulinkweb(uploadregsensorbuff[sbcount]);				
+								// opf403_regstulinkweb220(uploadregsensorbuff[sbcount]);							
 								
 							} else {							                       
 								console.log("linkchk fail ...",linkchkcount) 
@@ -1739,11 +2005,11 @@ app.listen(setport, function () {
 							linkchkcount++;
 							//relink DDNS for ngrok 
 							if(((typeof seturl) == "undefined" ) || (linkchkcount >=3) ){
-								console.log("get x11...") 
+								console.log("get x12...") 
 								reload104ddsn();
 							}							
 						});
-					}, 4 * 60 * 1000);
+					}, 5 * 60 * 1000);
 				}).on("error", function(err) {console.log("err for client");});
 			});
 		}else if(pdbuffer.pdjobj.PDDATA.linkoffmode == 1){//off link mode
@@ -1772,8 +2038,8 @@ app.listen(setport, function () {
 				
 				sbcount++;
 				if(sbcount>=sbcountmax)sbcount=0;	
-				opf403_regdev_loadscan(regsensorbuff[sbcount]);					
-				opf403_regstulinkweb220(regsensorbuff[sbcount]);	
+				opf403_regdev_loadscan(uploadregsensorbuff[sbcount]);					
+				opf403_regstulinkweb220(uploadregsensorbuff[sbcount]);	
 				
 				//### sensor data buffer upload to web server 	
 				//for(pp in sensorbuff[sbcount])devloadscan(sensorbuff[sbcount][pp]);	//load pos data to buffer 5min	
@@ -1831,9 +2097,13 @@ function reload105ddsn(){
 function reload104ddsn(){	
     console.log('recall ngrok ...');
 	ngrok.connect('192.168.5.104:3000',function (err, url) {
-		seturl = url
+		// if(url === undefined ){ //### this chek use the ngrok is fail  unlink .... 20180909 
+			// url="http://0000";
+		// }
+		seturl = url;
+		console.log("link container OPF408x2 get x13=>"+seturl);
+		
         chkurl = seturl+"/connectcheck"
-		console.log("link container OPF408x2 =>"+seturl);
         setddsnurl = ddsnurl+'?DeviceIP='+seturl+'&UUID='+setuuid
 		client.get(setddsnurl, function (data, response) {
 			console.log("get ok...") 				

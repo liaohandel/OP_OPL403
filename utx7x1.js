@@ -39,20 +39,27 @@ var sp = new SerialPort(portName, {
 });
 
 
+// var sp = new SerialPort(portName, {
+  // baudRate: 57600,
+  // dataBits: 8,
+  // parity: 'none',
+  // stopBits: 1,
+  // flowControl: false
+// });
 
 
 function rxchk(rbuf){
-	console.log("check rxbuff ...x1! ",rx_pt,rx_size)
+	console.log("check rxbuff ...x1! ",rx_pt,rx_size,rx_buf[0])
 	if(rx_pt<=rx_size && rbuf.length>0){
-		console.log("check rxbuff ...x2! ",rx_pt,rx_size)
+		//console.log("check rxbuff ...x2! ",rx_pt,rx_size)
 		//reload 0xfc and 0xfa command 
 		if(rx_pt>0 && ( rx_buf[0]==0xfa || rx_buf[0]==0xfc ) ){
 			rbuf.copy(rx_buf,rx_pt,0)
 			rx_pt = rx_pt + rbuf.length
-			console.log("check rxbuff ...x21! ",rx_pt,rx_size)
-			console.log(rx_buf.toString('hex'))
+			//console.log("check rxbuff ...x21! ",rx_pt,rx_size)
+			//console.log(rx_buf.toString('hex'))
 		}else{			
-			console.log("check rxbuff ...x22! ",rx_pt,rx_size)
+			//console.log("check rxbuff ...x22! ",rx_pt,rx_size)
 			for(i=0;i<rbuf.length;i++){
 				if(rbuf[i]==0xfa || rbuf[i]==0xfc ){
 					rbuf.copy(rx_buf,0,i,rbuf.length)
@@ -63,12 +70,20 @@ function rxchk(rbuf){
 		}
 	}else{
 		console.log("overbuff =["+rbuf.toString('hex')+"]");
+		rx_pt = 0;
+		for(i=0;i<rbuf.length;i++){
+			if(rbuf[i]==0xfa || rbuf[i]==0xfc ){
+				rbuf.copy(rx_buf,0,i,rbuf.length)
+				rx_pt = rx_pt + rbuf.length - i
+				break;
+			}
+		}
 	}
 	//check rx_buff format [0xfa],[add],[pam_leng],[dat]x(pamleng)
 	if((rx_buf[0]==0xfa||rx_buf[0]==0xfc ) && rx_pt >3 ){
 		console.log("check rxbuff ...x3! ",rx_pt,rx_size)
 		if(rx_pt > (rx_buf[2]+2)){
-			console.log("check rxbuff ...x31! ",rx_pt,rx_size)			
+			//console.log("check rxbuff ...x31! ",rx_pt,rx_size)			
 			sbuf = new Buffer(rx_buf[2]+3);
 			rx_buf.copy(sbuf,0,0,rx_buf[2]+3);
 			//if(sbuf[0]==0xfc){
@@ -78,23 +93,52 @@ function rxchk(rbuf){
 			if(sbuf[0]==0xfc){
 				aqrxcmd.push(sbuf.toString('hex'));
 				rx_pt = 0;
+				// moverxlen = rx_buf[2]+3;
+				// shiftrxlen = rx_size - moverxlen;
+				// if(rx_pt > moverxlen){
+					// rx_pt = rx_pt - moverxlen ;
+					// rx_buf.copy(rx_buf,0,moverxlen,shiftrxlen);
+				// }else{
+					// rx_pt=0;
+				// }
+			
 				global.arxokflag = true;
 				console.log('rxcommx1 ='+sbuf.toString('hex'));//rxcomm
 			}else{		
 				qrxcmd.push(sbuf.toString('hex'));
-				rx_pt = 0;
+				rx_pt = 0;				
+				// moverxlen = rx_buf[2]+3;
+				// shiftrxlen = rx_size - moverxlen;
+				// if(rx_pt > moverxlen){
+					// rx_pt = rx_pt - moverxlen ;
+					// rx_buf.copy(rx_buf,0,moverxlen,shiftrxlen);
+				// }else{
+					// rx_pt=0;
+				// }
+				
 				global.rxokflag = true;
 				console.log('rxcommx2 ='+sbuf.toString('hex'));
 				//send next tx command event
 				event.emit('stsend');
 			}
 		}		
-	};	
+	}else{
+		if(rx_pt<=3)return;
+		console.log("check rxbuff ...x32! ",rx_pt,rx_size,rx_buf[0]);
+		rx_pt = 0;
+		// for(i=0;i<rx_pt;i++){
+			// if(rx_buf[i]==0xfa || rx_buf[i]==0xfc ){
+				// rx_buf.copy(rx_buf,0,i,(rx_size-i));
+				// rx_pt =rx_pt - i
+				// break;
+			// }
+		// }
+	}		
 	
 }
 
 function qqsendcmd(txcmd,callback){
-	console.log("txbuff lengx2 = "+qtxcmd.length)
+	//console.log("txbuff lengx2 = "+qtxcmd.length)
 	qtxcmd.push(txcmd);
 	event.emit('stsend');
 	callback();
@@ -120,7 +164,7 @@ function aqrxcmdshift(){
 	}
 }
 event.on('stsend', function() {
-	console.log("txbuff lengx1 = "+qtxcmd.length)
+	//console.log("txbuff lengx1 = "+qtxcmd.length)
 	if(qtxcmd.length >0){
 		ss = qtxcmd.shift()
 		console.log("tx:"+ss);
