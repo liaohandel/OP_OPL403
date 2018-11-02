@@ -7,11 +7,11 @@
   apps : [
     // #1
     {
-		name	: 'webapp_gx8x2.js',
-		script  : '/home/pi/opcom_prj/gotest5_opf403/webapp_gx8x2.js',
+		name	: "webapp_gx8x2.js",
+		script  : "/home/pi/opcom_prj/gotest5_opf403/webapp_gx8x2.js",
         cwd		: "/home/pi/opcom_prj/gotest5_opf403/",
-		out_file 	: "/logs/null",
-		error_file 	: "/logs/null",
+		out_file 	: "/dev/null",
+		error_file : "/logs/runerr.txt",
 		exec_mode  	: "cluster",
 		env: {
 			NODE_ENV: "production"
@@ -19,11 +19,11 @@
     },
     // #2
     {
-		name   	: 'ipcamc906set.js',
-		script 	: '/home/pi/opcom_prj/gotest5_opf403/ipcamc906set.js',
+		name   	: "ipcamc906set.js",
+		script 	: "/home/pi/opcom_prj/gotest5_opf403/ipcamc906set.js",
         cwd		: "/home/pi/opcom_prj/gotest5_opf403/",
-		out_file : "/logs/null",
-		error_file : "/logs/null",
+		out_file : "/dev/null",
+		error_file : "/dev/null",
 		exec_mode  : "cluster",
 		env: {
 			NODE_ENV: "production"
@@ -31,11 +31,11 @@
     },
     // #3
     {
-		name 	: 'ipcamc907set.js',
-		script 	: '/home/pi/opcom_prj/gotest5_opf403/ipcamc907set.js',
+		name 	: "ipcamc907set.js",
+		script 	: "/home/pi/opcom_prj/gotest5_opf403/ipcamc907set.js",
         cwd		: "/home/pi/opcom_prj/gotest5_opf403/",
-		out_file : "/logs/null",
-		error_file : "/logs/null",
+		out_file : "/dev/null",
+		error_file : "/dev/null",
 		exec_mode  : "cluster",
 		env: {
 			NODE_ENV: "production"
@@ -43,11 +43,11 @@
     },
     // #4
     {
-		name    : 'ipcamc908set.js',
-		script  : '/home/pi/opcom_prj/gotest5_opf403/ipcamc908set.js',
+		name    : "ipcamc908set.js",
+		script  : "/home/pi/opcom_prj/gotest5_opf403/ipcamc908set.js",
         cwd		: "/home/pi/opcom_prj/gotest5_opf403/",
-		out_file : "/logs/null",
-		error_file : "/logs/null",
+		out_file : "/dev/null",
+		error_file : "/dev/null",
 		exec_mode  : "cluster",
 		env: {
 			NODE_ENV: "production"
@@ -55,11 +55,11 @@
     },
     // #5
     {
-		name    : 'ipcamc909set.js',
-		script  : '/home/pi/opcom_prj/gotest5_opf403/ipcamc909set.js',
+		name    : "ipcamc909set.js",
+		script  : "/home/pi/opcom_prj/gotest5_opf403/ipcamc909set.js",
         cwd		: "/home/pi/opcom_prj/gotest5_opf403/",
-		out_file : "/logs/null",
-		error_file : "/logs/null",
+		out_file : "/dev/null",
+		error_file : "/dev/null",
 		exec_mode  : "cluster",
 		env: {
 			NODE_ENV: "production"
